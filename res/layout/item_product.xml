@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="188dp"
+    android:background="#ffffff"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm1" />
+
+            <TextView
+                android:id="@+id/productname1_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="新圆形大米"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/productprice1_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/productname1_tv"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/submit1_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/productname1_tv"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm1" />
+
+            <TextView
+                android:id="@+id/productname2_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageView2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="7dp"
+                android:text="新圆形大米"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/productprice2_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/productname2_tv"
+                android:layout_below="@+id/productname2_tv"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/submit2_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/productname2_tv"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:background="@color/gray_listline_item" />
+
+</LinearLayout>

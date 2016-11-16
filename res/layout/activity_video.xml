@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" 
+    android:background="@color/maingrey_bg"
+    android:orientation="vertical">
+        <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@color/green_login_btn"
+        android:gravity="center_vertical" >
+        <TextView
+            android:id="@+id/monitor_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:text="视频监控"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+    <Button
+        android:id="@+id/buttonLogin"
+        android:layout_width="30dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/menu_bt" />
+
+  
+
+    </RelativeLayout>
+     <com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/listview_monitorlist"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:cacheColorHint="#00000000"
+        android:divider="#eeeeee"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:listSelector="#00000000"
+        android:smoothScrollbar="true" />
+</LinearLayout>

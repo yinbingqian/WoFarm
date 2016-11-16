@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/top_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@color/green_login_btn"
+        android:orientation="vertical" >
+
+        <com.lnpdit.woofarm.customview.FocusedtrueTV
+            android:id="@+id/tv_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerInParent="true"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="新品日期"
+            android:textColor="@color/white"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:layout_width="35dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="10dp"
+            android:clickable="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/img_back" />
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/img_back"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
+    </RelativeLayout>
+
+    <com.eroad.widget.calendar.CollapseCalendarView
+        android:id="@+id/calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.eroad.widget.calendar.CollapseCalendarView>
+
+    <Button
+        android:id="@+id/btn_today"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="回到今天" />
+
+    <Button
+        android:id="@+id/btn_changemode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="周月切换" />
+
+    <Button
+        android:id="@+id/btn_hide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="隐藏、显示农历" />
+
+</LinearLayout>

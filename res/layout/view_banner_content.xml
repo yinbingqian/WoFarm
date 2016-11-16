@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ad_rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.lnpdit.woofarm.utils.advert.CycleViewPager
+        android:id="@+id/pager_banner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.lnpdit.woofarm.utils.advert.CycleViewPager>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:id="@+id/viewGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp"
+            android:layout_toLeftOf="@+id/viewGroup"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

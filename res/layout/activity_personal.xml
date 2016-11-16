@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/register_bg"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/mime_layout_01"
+        android:layout_width="fill_parent"
+        android:layout_height="193dip"
+        android:background="@color/green_login_btn"
+        android:clickable="true" >
+
+        <com.lnpdit.woofarm.widget.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/img_user_avatar"
+            android:layout_width="78dp"
+            android:layout_height="78dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/wwj_748"
+            app:border_color="#FFffffff"
+            app:border_width="1dp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_user_avatar"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="Alice"
+                android:textColor="@color/white"
+                android:textSize="17dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/myorder_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/white" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/articel_img"
+                android:gravity="center"
+                android:text="我的订单"
+                android:textColor="@color/gray_text"
+                android:textSize="17dp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/mm_submenu" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/gray_listline_s" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/myaddress_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="47dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/question_img"
+                android:gravity="center"
+                android:text="地址管理"
+                android:textColor="@color/gray_text"
+                android:textSize="17dp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/mm_submenu" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/gray_listline_s" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/password_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/answer_img"
+                android:gravity="center"
+                android:text="修改密码"
+                android:textColor="@color/gray_text"
+                android:textSize="17dp" />
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/mm_submenu" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/version_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="46dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="13dp"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:gravity="center"
+                android:text="版本号"
+                android:textColor="@color/gray_text"
+                android:textSize="17dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="1.02.3"
+                android:textColor="@color/gray_texts"
+                android:textSize="17dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/logout_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="44dp"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="78dp"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tv_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="退出"
+            android:textColor="@color/gray_text"
+            android:textSize="17dp" />
+    </LinearLayout>
+
+</LinearLayout>

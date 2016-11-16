@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="common_top_bar_blue">#4ebcd3</color>
+    <color name="btn_login_normal">#00acff</color>
+    <color name="btn_login_pressed">#46678d</color>
+    <color name="btn_logout_normal">#d33f3f</color>
+    <color name="btn_logout_pressed">#DA5A4D</color>
+    <color name="btn_register_normal">#ffffff</color>
+    <color name="btn_register_pressed">#00acff</color>
+    <color name="light_blue">#5CACEE</color>
+    <color name="menu_back">#f2f2f2</color>
+    <color name="menutj_back">#c1c8d2</color>
+    <color name="menu_color">#373737</color>
+    <color name="text_graylight">#c7c7c7</color>
+    <color name="common_bottom_bar_normal_bg">#2d2f31</color>
+    <color name="common_bottom_bar_selected_bg">#161718</color>
+    <color name="common_botton_bar_blue">#2ea7e0</color>
+    <color name="common_bg">#fcfcfc</color>
+    <color name="btn_pressed_green_solid">#B6DA53</color>
+    <color name="divider_list">#d4d4d4</color>
+    <color name="top_bar_normal_bg">#00acff</color>
+    <color name="error_item_color">#F6EBE6</color>
+    <color name="bottom_bar_normal_bg">#2D2F31</color>
+    <color name="bottom_text_color_normal">#ffffff</color>
+    <color name="btn_white_normal">#f7f8f8</color>
+    <color name="btn_white_pressed">#b5b5b6</color>
+    <color name="btn_green_noraml">#68C270</color>
+    <color name="btn_green_pressed">#6FCD78</color>
+    <color name="btn_gray_normal">#c0c0c0</color>
+    <color name="btn_gray_pressed_status">#b5b5b6</color>
+    <color name="btn_gray_pressed">#666667</color>
+    <color name="btn_blue_normal">#1e90ff</color>
+    <color name="btn_blue_pressed">#0066FF</color>
+    <color name="orange">#FFA500</color>
+    <color name="gray_pressed">#b5b5b6</color>
+    <color name="gray_normal">#666667</color>
+    <color name="grid_state_pressed">#1Affffff</color>
+    <color name="grid_state_focused">#80000000</color>
+    <color name="voip_interface_text_color">#bababa</color>
+    <color name="black_deep">#FF000000</color>
+    <color name="btn_answer_pressed">#4ebcd3</color>
+    <color name="btn_answer_normal">#2dafa3</color>
+    <color name="maingrey_bg">#f4f4f4</color>
+    <color name="grey_deep">#999999</color>
+    <color name="grey_simple">#cccccc</color>
+    <color name="black_simple">#333333</color>
+    <color name="loginbt_green">#1acfb3</color>
+    <color name="dividerline">#eeeeee</color>
+
+    <!-- progressdialog字体颜色 蓝 -->
+    <color name="progress_msg_text_color_blue">#0159A0</color>
+    <!-- progressdialog字体颜色 深灰 -->
+    <color name="progress_msg_text_dark_grey">#333333</color>
+    <!-- 透明 -->
+    <color name="transparent">#00000000</color>
+    <!-- 黑白红 -->
+    <color name="blcak">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#CC0000</color>
+    <!-- 注册背景 -->
+    <color name="register_bg">#F8F8F8</color>
+    <color name="state_grid_green">#4E8177</color>
+    <color name="darkgray">#A9A9A9</color>
+    <color name="black">#000000</color>
+    <color name="cal_text_normal">#4A4A4A</color>
+    <color name="cal_text_light">#ababab</color>
+    <color name="cal_text_super_light">#c0c0c0</color>
+    <color name="cal_blue_light">#8EC5EE</color>
+    <color name="cal_blue_dark">#336F9C</color>
+    <color name="cal_stroke">#77d4f6</color>
+    <color name="cal_days_title">#F5F5F5</color>
+    <color name="cal_vertical_line">#E9F6FF</color>
+    <color name="cal_line_grey">#9B9B9B</color>
+    <color name="cal_color_white">#FFFFFF</color>
+    <color name="cal_color_red">#FFE54E36</color>
+    <color name="cal_color_green">#FF16A085</color>
+    <color name="cal_color_point_blue">#FF1875D1</color>
+    <color name="text_normal">#626262</color>
+    <color name="text_light">#ababab</color>
+    <color name="text_super_light">#c0c0c0</color>
+    <color name="blue_light">#48a5cc</color>
+    <color name="blue_dark">#00aeef</color>
+    <color name="stroke">#77d4f6</color>
+    <color name="green_login_btn">#2cc17b</color>
+    <color name="gray_top">#e5e9e7</color>
+    <color name="gray_deep">#e5e9e7</color>
+    <color name="gray_simple">#f2f2f2</color>
+    <color name="gray_text">#373737</color>
+    <color name="gray_texts">#828282</color>
+    <color name="gray_textsimple">#6f7c95</color>
+    <color name="gray_listline">#b7c4c6</color>
+    <color name="gray_listline_s">#c8c7cc</color>
+    <color name="gray_listline_item">#efefef</color>
+    <color name="gray_textlayout">#f7faff</color>
+    <color name="gray_layoutbg">#f2f2f2</color>
+    <color name="usericon_bg">#cdffe8</color>
+    <color name="userlayout_bg">#f8f8f8</color>
+    <color name="text_green">#2cc17b</color>
+    <color name="text_red">#ff421d</color>
+    <color name="yellow_bg">#e3d749</color>
+    <color name="yellow_bg_s">#eec43c</color>
+    <color name="graysearch_bg">#dfdfdf</color>
+    <color name="graysearchs_bg">#fafafa</color>
+    <color name="graycar_bg">#f8f6f0</color>
+    <color name="blackal_bg">#3c000000</color>
+
+</resources>

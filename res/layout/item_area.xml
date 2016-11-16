@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="138dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/content_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/monitorpic" >
+
+        <TextView
+           android:id="@+id/tv_name"
+            android:layout_width="110dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/videotv_bg"
+            android:gravity="center"
+            android:text="前杜草莓"
+            android:textColor="@color/text_green"
+            android:textSize="17sp" />
+    </RelativeLayout>
+
+</LinearLayout>

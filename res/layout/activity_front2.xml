@@ -1,0 +1,314 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <include layout="@layout/main_head" />
+
+    <com.lnpdit.woofarm.utils.advert.ImageCycleView
+        android:id="@+id/ad_view"
+        android:layout_width="fill_parent"
+        android:layout_height="160dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:background="@color/gray_textlayout" >
+
+        <TextView
+            android:id="@+id/left_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="新品推荐"
+            android:textColor="@color/gray_text"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/morexp_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/right_iv"
+            android:text="更多"
+            android:textColor="@color/gray_textsimple"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/right_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/cm1"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm1" />
+
+            <TextView
+                android:id="@+id/cm1_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm1"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="草莓"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/cm1_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm1_tv"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/cm1_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/cm1_tv"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/cm2"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm2" />
+
+            <TextView
+                android:id="@+id/cm2_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="7dp"
+                android:text="草莓"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/cm2_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/cm2_tv"
+                android:layout_below="@+id/cm2_tv"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/cm2_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/cm2_tv"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/cm3"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm3" />
+
+            <TextView
+                android:id="@+id/cm3_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm3"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="新圆形大米"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/cm3_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm3_tv"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/cm3_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/cm3_tv"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/cm4"
+                android:layout_width="150dp"
+                android:layout_height="112dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/cm4" />
+
+            <TextView
+                android:id="@+id/cm4_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/cm4"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="7dp"
+                android:text="新圆形大米"
+                android:textColor="@color/gray_text"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/cm4_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/cm4_tv"
+                android:layout_below="@+id/cm4_tv"
+                android:layout_marginTop="7dp"
+                android:text="¥ 12"
+                android:textColor="@color/text_red"
+                android:textSize="14dp" />
+
+            <Button
+                android:id="@+id/cm4_btn"
+                android:layout_width="54dp"
+                android:layout_height="22dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/cm4_tv"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="7dp"
+                android:layout_weight="1"
+                android:background="@drawable/label"
+                android:text="马上抢"
+                android:textColor="@color/white"
+                android:textSize="13dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/text_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:background="@color/gray_textlayout" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="预订商品"
+            android:textColor="@color/gray_text"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/moreyd_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@+id/rightyd_iv"
+            android:text="更多"
+            android:textColor="@color/gray_textsimple"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:id="@+id/rightyd_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/listview_productlist"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:cacheColorHint="#00000000"
+        android:divider="#eeeeee"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:listSelector="#00000000"
+        android:smoothScrollbar="true" />
+
+</LinearLayout>
