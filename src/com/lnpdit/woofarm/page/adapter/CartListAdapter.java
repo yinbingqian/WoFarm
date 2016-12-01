@@ -6,6 +6,7 @@ import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.entity.Cart;
 import com.lnpdit.woofarm.entity.DataInfoUn;
 import com.lnpdit.woofarm.entity.ProductRow;
+import com.lnpdit.woofarm.instance.Instance;
 import com.lnpdit.woofarm.page.activity.product.ProductInfoActivity;
 import com.lnpdit.woofarm.page.activity.setting.EditAddressActivity;
 
@@ -87,6 +88,7 @@ public class CartListAdapter extends BaseAdapter {
                     .findViewById(R.id.productprice);
             holder.productcount = (TextView) convertView
                     .findViewById(R.id.productcount);
+            
             convertView.setTag(holder);
 
         } else {
@@ -99,18 +101,11 @@ public class CartListAdapter extends BaseAdapter {
 
         holder.productname.setText(appInfo.getName());
         holder.productprice.setText(appInfo.getPrice() + "元/KG");
-        holder.productcount.setText("*" + appInfo.getCount());
+        holder.productcount.setText("* " + appInfo.getQuantity());
         
-        int value1 = 0;
-        Class<R.drawable> cls = R.drawable.class;
-        try {
-            value1 = cls.getDeclaredField(appInfo.getThumb()).getInt(null);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        holder.imageView1.setImageResource(value1);
-
+        String imgPath = appInfo.getImage();
+        Instance.imageLoader.displayImage(imgPath, holder.imageView1, Instance.user_s_options);
+        
         holder.product_layout.setOnClickListener(new View.OnClickListener() {
 
             @Override

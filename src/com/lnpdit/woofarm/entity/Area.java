@@ -4,16 +4,17 @@ import java.io.Serializable;
 
 public class Area implements Serializable {
     private String areaid;
+    private String address;
     private String img;
-    private String name;
 
     public Area() {
 
     }
 
-    public Area(String areaid, String name) {
+    public Area(String areaid, String address, String img) {
         this.areaid = areaid;
-        this.name = name;
+        this.address = address;
+        this.img = img;
     }
 
     public String getAreaid() {
@@ -24,6 +25,14 @@ public class Area implements Serializable {
         this.areaid = areaid;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getImg() {
         return img;
     }
@@ -31,11 +40,5 @@ public class Area implements Serializable {
     public void setImg(String img) {
         this.img = img;
     }
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

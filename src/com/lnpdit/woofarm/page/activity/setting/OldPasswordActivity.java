@@ -1,8 +1,13 @@
 package com.lnpdit.woofarm.page.activity.setting;
 
+import java.util.List;
+
+import org.json.JSONObject;
+
 import com.hp.hpl.sparta.Text;
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.base.component.BaseActivity;
+import com.lnpdit.woofarm.entity.Address;
 import com.lnpdit.woofarm.entity.LoginUser;
 import com.lnpdit.woofarm.http.SoapRes;
 import com.lnpdit.woofarm.md5.MD5Plus;
@@ -25,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class OldPasswordActivity extends Activity implements OnClickListener {
+public class OldPasswordActivity extends BaseActivity implements OnClickListener {
     Context context;
     private ImageView imgBack;
     private TextView tvBack;
@@ -33,7 +38,8 @@ public class OldPasswordActivity extends Activity implements OnClickListener {
     EditText password_edit;
     Button login_bt;
     private TextView tvNext;
-
+    private String memberid = "";
+    private String password="";    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -41,11 +47,16 @@ public class OldPasswordActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_updatepwd);
 
         context = this;
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
+       
         initView();
 
     }
 
     private void initView() {
+        username_edit = (EditText) findViewById(R.id.username_edit);
         imgBack = (ImageView) findViewById(R.id.img_back);
         imgBack.setOnClickListener(this);
         tvBack = (TextView) findViewById(R.id.tv_back);
@@ -69,11 +80,21 @@ public class OldPasswordActivity extends Activity implements OnClickListener {
             finish();
             break;
         case R.id.tv_next:
+            if(memberid.equals("")||memberid.equals(null)){
 
-            Intent intent= new Intent();
-            intent.setClass(context, ModifyPasswordActivity.class);
-            startActivity(intent);
-            finish();
+                Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+            }else{
+                password = username_edit.getText().toString();
+                if(password.equals("")||password.equals(null)){
+
+                    Toast.makeText(this, "请输入旧密码", Toast.LENGTH_SHORT).show();
+                }else{
+
+                    String[] property_va = new String[] { memberid, password};
+                    soapService.validationPasswordByMember(property_va);
+                }
+                }
+          
             break;
 
         default:
@@ -127,6 +148,36 @@ public class OldPasswordActivity extends Activity implements OnClickListener {
             return true;
         }
         return false;
+    }
+
+    
+    public void onEvent(SoapRes obj) {
+      if (obj.getCode().equals(SOAP_UTILS.METHOD.VALIDATIONPASSWORD)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                        
+                        Intent intent= new Intent();
+                        intent.putExtra("oldpassword", password);
+                        intent.setClass(context, ModifyPasswordActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 }

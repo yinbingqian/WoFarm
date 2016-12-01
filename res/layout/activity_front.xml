@@ -6,8 +6,8 @@
 
     <include layout="@layout/main_head" />
 
-    <ListView
-        android:id="@+id/listview_productlist"
+    <com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/listview_preproductlist"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#ffffff"

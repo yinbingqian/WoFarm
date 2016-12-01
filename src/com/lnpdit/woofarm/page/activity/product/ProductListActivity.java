@@ -1,48 +1,41 @@
 package com.lnpdit.woofarm.page.activity.product;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.eroad.widget.calendar.CalanderActivity;
 import com.lnpdit.woofarm.R;
+import com.lnpdit.woofarm.base.component.BaseActivity;
 import com.lnpdit.woofarm.db.DBHelper;
-import com.lnpdit.woofarm.entity.ADInfo;
-import com.lnpdit.woofarm.entity.DataInfoUn;
 import com.lnpdit.woofarm.entity.Product;
+import com.lnpdit.woofarm.entity.ProductByClass;
 import com.lnpdit.woofarm.entity.ProductRow;
-import com.lnpdit.woofarm.instance.Instance;
+import com.lnpdit.woofarm.http.SoapRes;
 import com.lnpdit.woofarm.page.adapter.ProductListAdapter;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.lnpdit.woofarm.utils.advert.ImageCycleView;
-import com.lnpdit.woofarm.utils.advert.ImageCycleView.ImageCycleViewListener;
-import com.slidingmenu.lib.SlidingMenu;
+import com.lnpdit.woofarm.utils.SOAP_UTILS;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
-public class ProductListActivity extends Activity implements OnClickListener {
+/**
+ * 商品列表
+ * 
+ * @author yinbingqian 类名称：ProductListActivity 创建时间:2016-11-22
+ */
+public class ProductListActivity extends BaseActivity implements OnClickListener {
     private DBHelper dbh;
     private Context context;
-    private Product product;
-    private List<Product> productList;
+    private ProductByClass productByClass;
+    private List<ProductByClass> productByClassList;
     private ProductRow productRow;
     private List<ProductRow> productRowList;
     private ListView listview_productlist;
@@ -53,6 +46,9 @@ public class ProductListActivity extends Activity implements OnClickListener {
     private TextView tvBack;
     private String title;
     private TextView tvTitle;
+    private int pageIndex = 1;
+    private String selltype = "";
+    private String classId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +56,14 @@ public class ProductListActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_producttype);
         context = this;
 
+        selltype = this.getIntent().getStringExtra("selltype");
         title = this.getIntent().getStringExtra("title");
+        if(selltype.equals("menu")){
+            classId = this.getIntent().getStringExtra("classId");
+        }
         initView();
         initData();
-        // setListeners();
+//         setListeners();
 
     }
 
@@ -77,7 +77,6 @@ public class ProductListActivity extends Activity implements OnClickListener {
         search_view = (SearchView) this.findViewById(R.id.search_view);
 
         productListView = (ListView) findViewById(R.id.listview_one);
-        // productListView = listview_productlist.getRefreshableView();
         if (search_view == null) {
             return;
         } else {
@@ -104,41 +103,52 @@ public class ProductListActivity extends Activity implements OnClickListener {
     }
 
     private void initData() {
+        getDBData();
+        
+        String[] property_va = new String[] {selltype , "10", pageIndex + ""};
+        soapService.getProductBySellType(property_va, false);
+        
+        String[] property_vamenu = new String[] {classId , "10", pageIndex + ""};
+        soapService.getProductByClass(property_vamenu, false);
+    }
 
+    private void getDBData() {
         dbh = new DBHelper(this);
-        product = new Product();
-        productList = new ArrayList<Product>();
+        productByClass = new ProductByClass();
         productRowList = new ArrayList<ProductRow>();
 
-        productList = dbh.queryProduct();
+        productByClassList = dbh.queryProductByClass();
 
-        for (int i = 0; i < productList.size(); i = i + 2) {
-            product = productList.get(i);
+        for (int i = 0; i < productByClassList.size(); i = i + 2) {
+            productByClass = productByClassList.get(i);
             productRow = new ProductRow();
-            productRow.setName1(product.getName());
-            productRow.setPrice1(product.getPrice());
-            productRow.setProid1(product.getProid());
-            productRow.setThumb1(product.getThumb());
+            productRow.setThumb1(productByClass.getImage());
+            productRow.setProid1(productByClass.getId());
+            productRow.setName1(productByClass.getName());
+            productRow.setPrice1(productByClass.getPrice());
 
-            if (i + 1 != productList.size()) {
-                product = productList.get(i + 1);
-                productRow.setName2(product.getName());
-                productRow.setPrice2(product.getPrice());
-                productRow.setProid2(product.getProid());
-                productRow.setThumb2(product.getThumb());
+            if (i + 1 != productByClassList.size()) {
+                productByClass = productByClassList.get(i + 1);
+                productRow.setThumb2(productByClass.getImage());
+                productRow.setProid2(productByClass.getId());
+                productRow.setName2(productByClass.getName());
+                productRow.setPrice2(productByClass.getPrice());
             } else {
+                productRow.setThumb2("none");
+                productRow.setProid2("none");
                 productRow.setName2("none");
                 productRow.setPrice2("none");
-                productRow.setProid2("none");
-                productRow.setThumb2("none");
             }
             productRowList.add(productRow);
         }
-
-        productlistAdapter = new ProductListAdapter(context, productRowList);
-        productListView.setAdapter(productlistAdapter);
-    }
-
+           if(productRowList.size() != 0){
+               productlistAdapter = new ProductListAdapter(context, productRowList);
+               productListView.setAdapter(productlistAdapter);
+          }else{
+           productListView.setAdapter(null);
+          }
+   }
+    
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -214,5 +224,57 @@ public class ProductListActivity extends Activity implements OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
     }
+    
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.GETPRODUCTBYSELLTYPE)) {
+            if (obj.getObj() != null) {
+                if(obj.getObj().equals("false")){
+                    Toast.makeText(context, "获取数据失败", Toast.LENGTH_SHORT).show();  
+                }else{
+                if (obj.isPage()) {
+                    for (ProductByClass bean : (List<ProductByClass>) obj.getObj()) {
+                        productByClassList.add(bean);
+                    }
+                    productlistAdapter.notifyDataSetChanged();
+                } else {
+                    productByClassList = (List<ProductByClass>) obj.getObj();
+                    if (productByClassList.size() != 0) {
 
+                        dbh.clearProductByClass();
+                        dbh.insProductByClassList(productByClassList);
+                        pageIndex = 1;
+                    }
+                    getDBData();
+                }
+                }
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        }else if(obj.getCode().equals(SOAP_UTILS.METHOD.GETPRODUCTBYCLASS)) {
+            if (obj.getObj() != null) {
+                if(obj.getObj().equals("false")){
+                    Toast.makeText(context, "获取数据失败", Toast.LENGTH_SHORT).show();  
+                    productListView.setAdapter(null);
+                }else{
+                if (obj.isPage()) {
+                    for (ProductByClass bean : (List<ProductByClass>) obj.getObj()) {
+                        productByClassList.add(bean);
+                    }
+                    productlistAdapter.notifyDataSetChanged();
+                } else {
+                    productByClassList = (List<ProductByClass>) obj.getObj();
+                    if (productByClassList.size() != 0) {
+
+                        dbh.clearProductByClass();
+                        dbh.insProductByClassList(productByClassList);
+                        pageIndex = 1;
+                    }
+                    getDBData();
+                }
+                }
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        } 
+    }
 }

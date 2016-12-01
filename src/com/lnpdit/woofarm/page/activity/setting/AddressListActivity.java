@@ -1,66 +1,57 @@
 package com.lnpdit.woofarm.page.activity.setting;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.eroad.widget.calendar.CalanderActivity;
-import com.lnpdit.woofarm.R;
-import com.lnpdit.woofarm.db.DBHelper;
-import com.lnpdit.woofarm.entity.ADInfo;
-import com.lnpdit.woofarm.entity.DataInfoUn;
-import com.lnpdit.woofarm.entity.Address;
-import com.lnpdit.woofarm.entity.ProductRow;
-import com.lnpdit.woofarm.instance.Instance;
-import com.lnpdit.woofarm.page.activity.login.LoginActivity;
-import com.lnpdit.woofarm.page.adapter.AddressListAdapter;
-import com.lnpdit.woofarm.page.adapter.ProductListAdapter;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.lnpdit.woofarm.utils.advert.ImageCycleView;
-import com.lnpdit.woofarm.utils.advert.ImageCycleView.ImageCycleViewListener;
-import com.slidingmenu.lib.SlidingMenu;
+import org.json.JSONObject;
 
-import android.app.Activity;
+import com.lnpdit.woofarm.R;
+import com.lnpdit.woofarm.base.component.BaseActivity;
+import com.lnpdit.woofarm.db.DBHelper;
+import com.lnpdit.woofarm.entity.Address;
+import com.lnpdit.woofarm.http.SoapRes;
+import com.lnpdit.woofarm.page.adapter.AddressListAdapter;
+import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase;
+import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView;
+import com.lnpdit.woofarm.utils.SOAP_UTILS;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
+import android.widget.Toast;
 
-public class AddressListActivity extends Activity implements OnClickListener {
+public class AddressListActivity extends BaseActivity implements OnClickListener {
     private DBHelper dbh;
     private Context context;
     private Address address;
     private List<Address> addressList;
     private ListView addressListView;
+    private PullToRefreshListView listview_addresslist;//地址 
     private AddressListAdapter addresslistAdapter;
     private Button addBtn;
     private ImageView imgBack;
     private TextView tvBack;
 
+    private String memberid = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
         context = this;
-
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
+        
         initView();
         initData();
-        // setListeners();
+        setListeners();
 
     }
 
@@ -72,21 +63,36 @@ public class AddressListActivity extends Activity implements OnClickListener {
         addBtn = (Button) findViewById(R.id.add_btn);
         addBtn.setOnClickListener(this);
 
-        addressListView = (ListView) findViewById(R.id.listview_addresslist);
+        listview_addresslist = (PullToRefreshListView) this.findViewById(R.id.listview_addresslist);
+        addressListView = listview_addresslist.getRefreshableView();
     }
 
     private void initData() {
+        getDBData();
+        if(memberid.equals("")||memberid.equals(null)){
+            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+        }else{
 
+        String[] property_va = new String[] {memberid};
+        soapService.getReceaddressByMember(property_va);
+        }
+    }
+
+    private void getDBData() {
         dbh = new DBHelper(this);
         address = new Address();
         addressList = new ArrayList<Address>();
 
         addressList = dbh.queryAddress();
-        
-        addresslistAdapter = new AddressListAdapter(context, addressList);
-        addressListView.setAdapter(addresslistAdapter);
-    }
+        if(addressList.size()!=0){
 
+            addresslistAdapter = new AddressListAdapter(context, addressList);
+            addressListView.setAdapter(addresslistAdapter);
+        }else{
+            addressListView.setAdapter(null);
+        }
+        
+   }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -98,6 +104,7 @@ public class AddressListActivity extends Activity implements OnClickListener {
             break;
         case R.id.add_btn:
             Intent intent = new Intent();
+            intent.putExtra("type", "add");
             intent.setClass(context, EditAddressActivity.class);
             startActivity(intent);
             break;
@@ -107,7 +114,7 @@ public class AddressListActivity extends Activity implements OnClickListener {
     }
 
     private void setListeners() {
-        // listview_productlist.setOnItemClickListener(new OnItemClickListener()
+        // listview_addresslist.setOnItemClickListener(new OnItemClickListener()
         // {
         //
         // @Override
@@ -125,32 +132,22 @@ public class AddressListActivity extends Activity implements OnClickListener {
         // // startActivity(intent);
         // }
         // });
-        // listview_productlist
-        // .setOnRefreshListener(new OnRefreshListener<ListView>() {
-        //
-        // @Override
-        // public void onRefresh(
-        // PullToRefreshBase<ListView> refreshView) {
-        // // pageIndex = 1;
-        // // String[] property_va = new String[] { "10",
-        // // pageIndex + "" };
-        // // soapService.GetDateListUn(property_va, false);
-        //
-        // }
-        // });
+         listview_addresslist.setOnRefreshListener(new OnRefreshListener<ListView>() {
+        
+         @Override
+         public void onRefresh(
+         PullToRefreshBase<ListView> refreshView) {
+             if(memberid.equals("")||memberid.equals(null)){
+                 Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+             }else{
 
-        // end of list
-        // listview_productlist
-        // .setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
-        //
-        // @Override
-        // public void onLastItemVisible() {
-        // // String[] property_va = new String[] { "10",
-        // // ++pageIndex + "" };
-        // // soapService.GetDateListUn(property_va, true);
-        //
-        // }
-        // });
+             String[] property_va = new String[] {memberid};
+             soapService.getReceaddressByMember(property_va);
+             }
+         }
+         });
+
+    
     }
 
     @Override
@@ -170,4 +167,130 @@ public class AddressListActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.GETRECEADDRESSBYMEMBER)) {
+            listview_addresslist.onRefreshComplete();
+            if (obj.getObj() != null) {
+                if(obj.getObj().equals("false")){
+                    Toast.makeText(context, "获取数据失败", Toast.LENGTH_SHORT).show();  
+                }else{
+                    addressList = (List<Address>) obj.getObj();
+                    if (addressList.size() != 0) {
+
+                        dbh.clearAllAddress();
+                        dbh.insAddressList(addressList);
+                    }
+                    getDBData();
+                }
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.DELETERECEADDRESSBYID)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                        if(memberid.equals("")||memberid.equals(null)){
+                            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                        }else{
+
+                        String[] property_va = new String[] {memberid};
+                        soapService.getReceaddressByMember(property_va);
+                        }
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.ADDRECEADDRESS)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show(); 
+                        if(memberid.equals("")||memberid.equals(null)){
+                            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                        }else{
+
+                        String[] property_va = new String[] {memberid};
+                        soapService.getReceaddressByMember(property_va);
+                        } 
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.UPDATERECEADDRESS)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                        if(memberid.equals("")||memberid.equals(null)){
+                            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                        }else{
+
+                        String[] property_va = new String[] {memberid};
+                        soapService.getReceaddressByMember(property_va);
+                        }
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.SETRECEADDRESSSTATBYID)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show(); 
+                        if(memberid.equals("")||memberid.equals(null)){
+                            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+                        }else{
+
+                        String[] property_va = new String[] {memberid};
+                        soapService.getReceaddressByMember(property_va);
+                        }
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    
 }

@@ -3,103 +3,108 @@ package com.lnpdit.woofarm.entity;
 import java.io.Serializable;
 
 public class Order implements Serializable {
-    private String userid;
+    private String id;
     private String orderid;
-    private String proid;
-    private String type;
-    private String name;
-    private String price;
-    private String thumb;
-    private String hj;
-    private String result;
+    private String consigneerealname;
+    private String consigneeaddress;
+    private String consigneephone;
+    private String paymenttype;
+    private String orderdate;
+    private String orderstate;
+    private String productimg;
+    private String productname;
+    private String productprice;
+    private String productnum;
 
-    public Order() {
+//  public Order(String id,String orderid, String consigneerealname, String consigneeaddress, String consigneephone,
+//          String paymenttype, String orderdate, String orderstate, String productimg, String productname, String productprice, String productnum) {
+//      this.id = id;
+//      this.orderid = orderid;
+//      this.consigneerealname = consigneerealname;
+//      this.consigneeaddress = consigneeaddress;
+//      this.consigneephone = consigneephone;
+//      this.paymenttype = paymenttype;
+//      this.orderdate = orderdate;
+//      this.orderstate = orderstate;
+//      this.productimg = productimg;
+//      this.productname = productname;
+//      this.productprice = productprice;
+//      this.productnum = productnum;
+//  }
 
+
+    public String getId() {
+        return id;
     }
-
-    public Order(String userid,String orderid, String proid, String type, String name,
-            String price, String thumb, String hj, String result) {
-        this.userid = userid;
-        this.orderid = orderid;
-        this.proid = proid;
-        this.type = type;
-        this.name = name;
-        this.price = price;
-        this.thumb = thumb;
-        this.hj = hj;
-        this.result = result;
+    public void setId(String id) {
+        this.id = id;
     }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
     public String getOrderid() {
         return orderid;
     }
-
     public void setOrderid(String orderid) {
         this.orderid = orderid;
     }
-
-    public String getProid() {
-        return proid;
+    public String getConsigneerealname() {
+        return consigneerealname;
+    }
+    public void setConsigneerealname(String consigneerealname) {
+        this.consigneerealname = consigneerealname;
+    }
+    public String getConsigneeaddress() {
+        return consigneeaddress;
+    }
+    public void setConsigneeaddress(String consigneeaddress) {
+        this.consigneeaddress = consigneeaddress;
+    }
+    public String getConsigneephone() {
+        return consigneephone;
+    }
+    public void setConsigneephone(String consigneephone) {
+        this.consigneephone = consigneephone;
+    }
+    public String getPaymenttype() {
+        return paymenttype;
+    }
+    public void setPaymenttype(String paymenttype) {
+        this.paymenttype = paymenttype;
+    }
+    public String getOrderdate() {
+        return orderdate;
+    }
+    public void setOrderdate(String orderdate) {
+        this.orderdate = orderdate;
+    }
+    public String getOrderstate() {
+        return orderstate;
+    }
+    public void setOrderstate(String orderstate) {
+        this.orderstate = orderstate;
+    }
+    public String getProductimg() {
+        return productimg;
+    }
+    public void setProductimg(String productimg) {
+        this.productimg = productimg;
+    }
+    public String getProductname() {
+        return productname;
+    }
+    public void setProductname(String productname) {
+        this.productname = productname;
+    }
+    public String getProductprice() {
+        return productprice;
+    }
+    public void setProductprice(String productprice) {
+        this.productprice = productprice;
+    }
+    public String getProductnum() {
+        return productnum;
+    }
+    public void setProductnum(String productnum) {
+        this.productnum = productnum;
     }
 
-    public void setProid(String proid) {
-        this.proid = proid;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
-    public String getHj() {
-        return hj;
-    }
-
-    public void setHj(String hj) {
-        this.hj = hj;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
 
 }

@@ -3,15 +3,21 @@ package com.lnpdit.woofarm.db;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lnpdit.woofarm.entity.ADIndex;
+import com.lnpdit.woofarm.entity.ADInfo;
 import com.lnpdit.woofarm.entity.Address;
 import com.lnpdit.woofarm.entity.Area;
 import com.lnpdit.woofarm.entity.Camera;
 import com.lnpdit.woofarm.entity.Cart;
 import com.lnpdit.woofarm.entity.ChatMessage;
-import com.lnpdit.woofarm.entity.LoginUser;
-import com.lnpdit.woofarm.entity.Order;
-import com.lnpdit.woofarm.entity.Product;
 import com.lnpdit.woofarm.entity.Classify;
+import com.lnpdit.woofarm.entity.LoginUser;
+import com.lnpdit.woofarm.entity.Menu;
+import com.lnpdit.woofarm.entity.Order;
+import com.lnpdit.woofarm.entity.PreProduct;
+import com.lnpdit.woofarm.entity.Product;
+import com.lnpdit.woofarm.entity.ProductByClass;
+import com.lnpdit.woofarm.entity.ProductInfo;
 import com.lnpdit.woofarm.entity.UserInfo;
 import com.lnpdit.woofarm.utils.Utils;
 
@@ -42,17 +48,29 @@ public class DBHelper extends SQLiteOpenHelper {
      * user_clid bigint "target_type integer "child_clid text
      * 
      */
+    private static final String CREATE_TABLE_USERINFO = "CREATE TABLE USERINFO (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,USERID TEXT, USERNAME TEXT,  HEADPIC TEXT)";
+
     private static final String CREATE_TABLE_PRODUCT = "CREATE TABLE PRODUCT (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,PROID TEXT, NAME TEXT,  PRICE TEXT,UPTIME TEXT, PLACE TEXT,NUMBER TEXT,THUMB TEXT,PIC TEXT,IP TEXT,PORT TEXT,USERNAME TEXT,PASSWORD TEXT, CHNO TEXT)";
 
-    private static final String CREATE_TABLE_MYORDER = "CREATE TABLE MYORDER (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, USERID TEXT, ORDERID TEXT, PROID TEXT,  TYPE TEXT,NAME TEXT, PRICE TEXT,THUMB TEXT,HJ TEXT,RESULT TEXT)";
+    private static final String CREATE_TABLE_PRODUCTBYCLASS = "CREATE TABLE PRODUCTBYCLASS (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,IMAGE TEXT,PROID TEXT, NAME TEXT,  PRICE TEXT)";
 
-    private static final String CREATE_TABLE_CART = "CREATE TABLE CART (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, USERID TEXT, CARTID TEXT, PROID TEXT,  NAME TEXT, PRICE TEXT,COUNT TEXT, THUMB TEXT,HJ TEXT)";
+    private static final String CREATE_TABLE_PREPRODUCT = "CREATE TABLE PREPRODUCT (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,IMAGE TEXT,PROID TEXT, NAME TEXT,  PRICE TEXT)";
 
+    private static final String CREATE_TABLE_MENU = "CREATE TABLE MENU (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,PROID TEXT, NAME TEXT)";
+
+    private static final String CREATE_TABLE_ADINDEX = "CREATE TABLE ADINDEX (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,IMAGE TEXT, LINKADDRESS TEXT)";
+     
+    private static final String CREATE_TABLE_PRODUCTINFO = "CREATE TABLE PRODUCTINFO (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,STATUS TEXT, MSG TEXT,IMAGE TEXT, NAME TEXT, PRICE TEXT,SHELVESTIME TEXT, AREA TEXT,CHANNELID TEXT, IP TEXT,PORT TEXT, ACCOUNT TEXT,PASSWORD TEXT, TYPE TEXT,ID TEXT, YIELD TEXT,IMGS TEXT)";
+   
+    private static final String CREATE_TABLE_MYORDER = "CREATE TABLE MYORDER (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, ID TEXT, ORDERID TEXT, CONSIGNEEREALNAME TEXT,  CONSIGNEEADDRESS TEXT,CONSIGNEEPHONE TEXT, PAYMENTTYLE TEXT,ORDERDATE TEXT,ORDERSTATE TEXT,PRODUCTIMG TEXT,PRODUCTNAME TEXT,PRODUCTPRICE TEXT,PRODUCTNUM TEXT)";
+
+    private static final String CREATE_TABLE_CART = "CREATE TABLE CART (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,IMAGE TEXT, ID TEXT, NAME TEXT, PRICE TEXT,QUANTITY TEXT, TOTALPRICE TEXT, SHOPID TEXT)";
+  
     private static final String CREATE_TABLE_CLASSIFY = "CREATE TABLE CLASSIFY (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,CLAID TEXT, NAME TEXT,  TYPE TEXT)";
 
-    private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE ADDRESS (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, USERID TEXT, ADDID TEXT, IFDEFAULT TEXT,  NAME TEXT, PHONE TEXT,ADDINFO TEXT)";
+    private static final String CREATE_TABLE_ADDRESS = "CREATE TABLE ADDRESS (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,ADDRESS TEXT,CITY TEXT,ID TEXT,  MOBILE TEXT,PROVINCE TEXT,  STAT TEXT, USERNAME TEXT)";
 
-    private static final String CREATE_TABLE_AREA = "CREATE TABLE AREA (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, AREAID TEXT, IMG TEXT,  NAME TEXT)";
+    private static final String CREATE_TABLE_AREA = "CREATE TABLE AREA (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, AREAID TEXT,  ADDRESS TEXT, IMG TEXT)";
 
     private static final String CREATE_TABLE_CAMERA = "CREATE TABLE CAMERA (_ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, AREAID TEXT,  CAMERAID TEXT, IMG TEXT,   NAME TEXT)";
 
@@ -77,7 +95,13 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         System.out.println("wofarm.db ========== onCreate");
+        db.execSQL(CREATE_TABLE_USERINFO);
         db.execSQL(CREATE_TABLE_PRODUCT);
+        db.execSQL(CREATE_TABLE_PRODUCTBYCLASS);
+        db.execSQL(CREATE_TABLE_PREPRODUCT);
+        db.execSQL(CREATE_TABLE_ADINDEX);
+        db.execSQL(CREATE_TABLE_MENU);
+        db.execSQL(CREATE_TABLE_PRODUCTINFO);
         db.execSQL(CREATE_TABLE_MYORDER);
         db.execSQL(CREATE_TABLE_CART);
         db.execSQL(CREATE_TABLE_CLASSIFY);
@@ -96,19 +120,10 @@ public class DBHelper extends SQLiteOpenHelper {
         System.out.println("#SU DB# insUserInfo");
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("CHECKNUM", data.getchecknum());
-        values.put("CHECKSTA", data.getchecksta());
-        values.put("HEADPIC", data.getheadpic());
-        values.put("ID", data.getid());
-        values.put("LEVEL", data.getlevel());
-        values.put("MARK", data.getmark());
-        values.put("NAME", data.getname());
-        values.put("PRESTIGE", data.getprestige());
-        values.put("RANK", data.getrank());
-        values.put("REALNAME", data.getrealname());
-        values.put("BIRTH", data.getbirth());
-        values.put("SEX", data.getsex());
-        db.insert("T_SU_USER", "", values);
+        values.put("USERID", data.getUserid());
+        values.put("USERNAME", data.getUsername());
+        values.put("HEADPIC", data.getHeadpic());
+        db.insert("USERINFO", "", values);
         close();
     }
 
@@ -116,7 +131,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(name, data);
         SQLiteDatabase db = getWritableDatabase();
-        db.update("T_SU_USER", cv, "ID=?", new String[] { loginUserId });
+        db.update("USERINFO", cv, "USERID=?", new String[] { loginUserId });
         close();
     }
 
@@ -125,27 +140,36 @@ public class DBHelper extends SQLiteOpenHelper {
         List<UserInfo> list = new ArrayList<UserInfo>();
         UserInfo user = new UserInfo();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM T_SU_USER", null);
+        Cursor c = db.rawQuery("SELECT * FROM USERINFO", null);
         while (c.moveToNext()) {
             user = new UserInfo();
-            user.setchecknum(c.getString(c.getColumnIndex("CHECKNUM")));
-            user.setchecksta(c.getString(c.getColumnIndex("CHECKSTA")));
-            user.setheadpic(c.getString(c.getColumnIndex("HEADPIC")));
-            user.setid(c.getString(c.getColumnIndex("ID")));
-            user.setlevel(c.getString(c.getColumnIndex("LEVEL")));
-            user.setmark(c.getString(c.getColumnIndex("MARK")));
-            user.setname(c.getString(c.getColumnIndex("NAME")));
-            user.setprestige(c.getString(c.getColumnIndex("PRESTIGE")));
-            user.setrank(c.getString(c.getColumnIndex("RANK")));
-            user.setrealname(c.getString(c.getColumnIndex("REALNAME")));
-            user.setsex(c.getString(c.getColumnIndex("SEX")));
-            user.setbirth(c.getString(c.getColumnIndex("BIRTH")));
+            user.setUserid(c.getString(c.getColumnIndex("USERID")));
+            user.setUsername(c.getString(c.getColumnIndex("USERNAME")));
+            user.setHeadpic(c.getString(c.getColumnIndex("HEADPIC")));
             list.add(user);
         }
         close();
         return list;
     }
 
+    public UserInfo queryUserInfoById(String userId) {
+        System.out.println("#SU DB# queryUserInfoById");
+        UserInfo userinfo = new UserInfo();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String[] param = { userId };
+        Cursor c = db.rawQuery("SELECT * FROM USERINFO WHERE USERID = ?", param);
+        while (c.moveToNext()) {
+            userinfo = new UserInfo();
+            userinfo.setUserid(c.getString(c.getColumnIndex("USERID")));
+            userinfo.setUsername(c.getString(c.getColumnIndex("USERNAME")));
+            userinfo.setHeadpic(c.getString(c.getColumnIndex("HEADPIC")));
+        }
+        c.close();
+        close();
+        return userinfo;
+    }
+
+    
     public void clearNewsData() {
         System.out.println("#SU DB# cheanLoginUserData");
         SQLiteDatabase db = getWritableDatabase();
@@ -173,7 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void clearUserInfoData() {
         System.out.println("#SU DB# cheanLoginUserData");
         SQLiteDatabase db = getWritableDatabase();
-        db.delete("T_SU_USER", null, null);
+        db.delete("USERINFO", null, null);
     }
 
     /**
@@ -356,6 +380,32 @@ public class DBHelper extends SQLiteOpenHelper {
         close();
     }
 
+
+    public void insProductList(List<Product> data) {
+        System.out.println("#SU DB# insProductList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("PROID", data.get(i).getProid());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            values.put("UPTIME", data.get(i).getUptime());
+            values.put("PLACE", data.get(i).getPlace());
+            values.put("NUMBER", data.get(i).getNumber());
+            values.put("THUMB", data.get(i).getThumb());
+            values.put("PIC", data.get(i).getPic());
+            values.put("IP", data.get(i).getIp());
+            values.put("PORT", data.get(i).getPort());
+            values.put("USERNAME", data.get(i).getUsername());
+            values.put("PASSWORD", data.get(i).getPassword());
+            values.put("CHNO", data.get(i).getChno());
+            db.insert("PRODUCT", "", values);
+
+        }
+        close();
+    }
+
+    
     public Product queryProductById(String productId) {
         System.out.println("#SU DB# queryProductById");
         Product product = new Product();
@@ -410,16 +460,6 @@ public class DBHelper extends SQLiteOpenHelper {
         close();
         return list;
     }
-    //
-    // public void updateProduct(String ProductName, String StartDate) {
-    // ContentValues cv = new ContentValues();
-    // cv.put("STATUS", "1");
-    // SQLiteDatabase db = getWritableDatabase();
-    // db.update("PRODUCT", cv, "ProductName=? AND StartDate=?", new String[] {
-    // ProductName, StartDate });
-    // close();
-    // }
-
     public int deleteProductById(String productId) {
         System.out.println("#SU DB# deleteProductById");
         String[] param = { productId };
@@ -433,6 +473,349 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.delete("PRODUCT", null, null);
     }
 
+
+    /**
+     * 产品列表
+     * 
+     * @param order
+     */
+
+    public void insProductByClass(List<ProductByClass> data) {
+        System.out.println("#SU DB# insProductByClass");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            db.insert("PRODUCTBYCLASS", "", values);
+        }
+        close();
+    }
+    
+    public void insProductByClassList(List<ProductByClass> data) {
+        System.out.println("#SU DB# insProductByClassList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            db.insert("PRODUCTBYCLASS", "", values);
+
+        }
+        close();
+    }
+
+    
+    public ArrayList<ProductByClass> queryProductByClass() {
+        System.out.println("#SU DB# queryProductByClass");
+        ArrayList<ProductByClass> list = new ArrayList<ProductByClass>();
+        ProductByClass adi = new ProductByClass();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM PRODUCTBYCLASS", null);
+        while (c.moveToNext()) {
+            adi = new ProductByClass();
+            adi.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            adi.setId(c.getString(c.getColumnIndex("PROID")));
+            adi.setName(c.getString(c.getColumnIndex("NAME")));
+            adi.setPrice(c.getString(c.getColumnIndex("PRICE")));
+            list.add(adi);
+            
+        }
+
+        close();
+        return list;
+    }
+    
+    
+    public void clearProductByClass() {
+        System.out.println("#SU DB# cheanProductByClass");
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("PRODUCTBYCLASS", null, null);
+    }
+    
+    /**
+     * 产品列表-预订商品
+     * 
+     * @param order
+     */
+
+    public void insPreProduct(List<PreProduct> data) {
+        System.out.println("#SU DB# insPreProduct");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            db.insert("PREPRODUCT", "", values);
+        }
+        close();
+    }
+    
+    public void insPreProductList(List<PreProduct> data) {
+        System.out.println("#SU DB# insPreProductList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            db.insert("PREPRODUCT", "", values);
+
+        }
+        close();
+    }
+
+    
+    public ArrayList<PreProduct> queryPreProduct() {
+        System.out.println("#SU DB# queryPreProduct");
+        ArrayList<PreProduct> list = new ArrayList<PreProduct>();
+        PreProduct adi = new PreProduct();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM PREPRODUCT", null);
+        while (c.moveToNext()) {
+            adi = new PreProduct();
+            adi.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            adi.setId(c.getString(c.getColumnIndex("PROID")));
+            adi.setName(c.getString(c.getColumnIndex("NAME")));
+            adi.setPrice(c.getString(c.getColumnIndex("PRICE")));
+            list.add(adi);
+            
+        }
+
+        close();
+        return list;
+    }
+    
+    
+    public void clearPreProduct() {
+        System.out.println("#SU DB# cheanPreProduct");
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("PREPRODUCT", null, null);
+    }
+    
+    
+    /**
+     * 首页-左侧弹出产品分类列表
+     * 
+     * @param order
+     */
+
+    public void insADIndex(List<ADInfo> data) {
+        System.out.println("#SU DB# insADIndex");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("LINKADDRESS", data.get(i).getLinkaddress());
+            db.insert("ADINDEX", "", values);
+        }
+        close();
+    }
+    
+    public void insADIndexList(List<ADInfo> data) {
+        System.out.println("#SU DB# insADIndexList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("LINKADDRESS", data.get(i).getLinkaddress());
+            db.insert("ADINDEX", "", values);
+
+        }
+        close();
+    }
+
+    
+    public ArrayList<ADInfo> queryADIndex() {
+        System.out.println("#SU DB# queryADIndex");
+        ArrayList<ADInfo> list = new ArrayList<ADInfo>();
+        ADInfo adi = new ADInfo();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM ADINDEX", null);
+        while (c.moveToNext()) {
+            adi = new ADInfo();
+            adi.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            adi.setLinkaddress(c.getString(c.getColumnIndex("LINKADDRESS")));
+            list.add(adi);
+            
+        }
+
+        close();
+        return list;
+    }
+    
+    
+    public void clearADIndex() {
+        System.out.println("#SU DB# cheanADIndex");
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("ADINDEX", null, null);
+    }
+   
+    /**
+     * 首页-左侧弹出产品分类列表
+     * 
+     * @param order
+     */
+
+    public void insMenu(List<Menu> data) {
+        System.out.println("#SU DB# insMenu");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            db.insert("MENU", "", values);
+        }
+        close();
+    }
+    
+    public void insMenuList(List<Menu> data) {
+        System.out.println("#SU DB# insMenuList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("PROID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            db.insert("MENU", "", values);
+
+        }
+        close();
+    }
+
+    
+    public ArrayList<Menu> queryMenu() {
+        System.out.println("#SU DB# queryMenu");
+        ArrayList<Menu> list = new ArrayList<Menu>();
+        Menu adi = new Menu();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM MENU", null);
+        while (c.moveToNext()) {
+            adi = new Menu();
+            adi.setId(c.getString(c.getColumnIndex("PROID")));
+            adi.setName(c.getString(c.getColumnIndex("NAME")));
+            list.add(adi);
+            
+        }
+
+        close();
+        return list;
+    }
+    
+    
+    public void clearMenu() {
+        System.out.println("#SU DB# cheanMenu");
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("MENU", null, null);
+    }
+     
+
+    /**
+     * 首页-左侧弹出产品分类列表
+     * 
+     * @param order
+     */
+
+    public void insProductInfo(List<ProductInfo> data) {
+        System.out.println("#SU DB# insProductInfo");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("STATUS", data.get(i).getStatus());
+            values.put("MSG", data.get(i).getMsg());
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            values.put("SHELVESTIME", data.get(i).getShelvestime());
+            values.put("AREA", data.get(i).getArea());
+            values.put("CHANNELID", data.get(i).getChannelid());
+            values.put("IP", data.get(i).getIp());
+            values.put("PORT", data.get(i).getPort());
+            values.put("ACCOUNT", data.get(i).getAccount());
+            values.put("PASSWORD", data.get(i).getPassword());
+            values.put("TYPE", data.get(i).getType());
+            values.put("ID", data.get(i).getId());
+            values.put("YIELD", data.get(i).getYield());
+            values.put("IMGS", data.get(i).getImgs());
+            db.insert("PRODUCTINFO", "", values);
+        }
+        close();
+    }
+    
+    public void insProductInfoList(List<ProductInfo> data) {
+        System.out.println("#SU DB# insProductInfoList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("STATUS", data.get(i).getStatus());
+            values.put("MSG", data.get(i).getMsg());
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            values.put("SHELVESTIME", data.get(i).getShelvestime());
+            values.put("AREA", data.get(i).getArea());
+            values.put("CHANNELID", data.get(i).getChannelid());
+            values.put("IP", data.get(i).getIp());
+            values.put("PORT", data.get(i).getPort());
+            values.put("ACCOUNT", data.get(i).getAccount());
+            values.put("PASSWORD", data.get(i).getPassword());
+            values.put("TYPE", data.get(i).getType());
+            values.put("ID", data.get(i).getId());
+            values.put("YIELD", data.get(i).getYield());
+            values.put("IMGS", data.get(i).getImgs());
+            db.insert("PRODUCTINFO", "", values);
+
+        }
+        close();
+    }
+
+    
+    public ArrayList<ProductInfo> queryProductInfo() {
+        System.out.println("#SU DB# queryProductInfo");
+        ArrayList<ProductInfo> list = new ArrayList<ProductInfo>();
+        ProductInfo adi = new ProductInfo();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM PRODUCTINFO", null);
+        while (c.moveToNext()) {
+            adi = new ProductInfo();
+            adi.setStatus(c.getString(c.getColumnIndex("STATUS")));
+            adi.setMsg(c.getString(c.getColumnIndex("MSG")));
+            adi.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            adi.setName(c.getString(c.getColumnIndex("NAME")));
+            adi.setPrice(c.getString(c.getColumnIndex("PRICE")));
+            adi.setShelvestime(c.getString(c.getColumnIndex("SHELVESTIME")));
+            adi.setArea(c.getString(c.getColumnIndex("AREA")));
+            adi.setChannelid(c.getString(c.getColumnIndex("CHANNELID")));
+            adi.setIp(c.getString(c.getColumnIndex("IP")));
+            adi.setPort(c.getString(c.getColumnIndex("PORT")));
+            adi.setAccount(c.getString(c.getColumnIndex("ACCOUNT")));
+            adi.setPassword(c.getString(c.getColumnIndex("PASSWORD")));
+            adi.setType(c.getString(c.getColumnIndex("TYPE")));
+            adi.setId(c.getString(c.getColumnIndex("ID")));
+            adi.setYield(c.getString(c.getColumnIndex("YIELD")));
+            adi.setImgs(c.getString(c.getColumnIndex("IMGS")));
+            list.add(adi);
+            
+        }
+
+        close();
+        return list;
+    }
+    
+    
+    public void clearProductInfo() {
+        System.out.println("#SU DB# cheanProductInfo");
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete("PRODUCTINFO", null, null);
+    }
+     
+    
     /**
      * 订单
      * 
@@ -443,19 +826,46 @@ public class DBHelper extends SQLiteOpenHelper {
         System.out.println("#SU DB# insertOrder");
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("USERID", order.getUserid());
+        values.put("ID", order.getId());
         values.put("ORDERID", order.getOrderid());
-        values.put("PROID", order.getProid());
-        values.put("TYPE", order.getType());
-        values.put("NAME", order.getName());
-        values.put("PRICE", order.getPrice());
-        values.put("THUMB", order.getThumb());
-        values.put("HJ", order.getHj());
-        values.put("RESULT", order.getResult());
+        values.put("CONSIGNEEREALNAME", order.getConsigneerealname());
+        values.put("CONSIGNEEADDRESS", order.getConsigneeaddress());
+        values.put("CONSIGNEEPHONE", order.getConsigneephone());
+        values.put("PAYMENTTYLE", order.getPaymenttype());
+        values.put("ORDERDATE", order.getOrderdate());
+        values.put("ORDERSTATE", order.getOrderstate());
+        values.put("PRODUCTIMG", order.getProductimg());
+        values.put("PRODUCTNAME", order.getProductname());
+        values.put("PRODUCTPRICE", order.getProductprice());
+        values.put("PRODUCTNUM", order.getProductnum());
         db.insert("MYORDER", "", values);
         close();
     }
+    
+    public void insOrderList(List<Order> data) {
+        System.out.println("#SU DB# insOrderList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("ID", data.get(i).getId());
+            values.put("ORDERID", data.get(i).getOrderid());
+            values.put("CONSIGNEEREALNAME", data.get(i).getConsigneerealname());
+            values.put("CONSIGNEEADDRESS", data.get(i).getConsigneeaddress());
+            values.put("CONSIGNEEPHONE", data.get(i).getConsigneephone());
+            values.put("PAYMENTTYLE", data.get(i).getPaymenttype());
+            values.put("ORDERDATE", data.get(i).getOrderdate());
+            values.put("ORDERSTATE", data.get(i).getOrderstate());
+            values.put("PRODUCTIMG", data.get(i).getProductimg());
+            values.put("PRODUCTNAME", data.get(i).getProductname());
+            values.put("PRODUCTPRICE", data.get(i).getProductprice());
+            values.put("PRODUCTNUM", data.get(i).getProductnum());
+            db.insert("MYORDER", "", values);
 
+        }
+        close();
+    }
+
+    
     public Order queryOrderById(String orderId) {
         System.out.println("#SU DB# queryOrderById");
         Order order = new Order();
@@ -464,15 +874,18 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM MYORDER WHERE ID = ?", param);
         while (c.moveToNext()) {
             order = new Order();
-            order.setUserid(c.getString(c.getColumnIndex("USERID")));
+            order.setId(c.getString(c.getColumnIndex("ID")));
             order.setOrderid(c.getString(c.getColumnIndex("ORDERID")));
-            order.setProid(c.getString(c.getColumnIndex("PROID")));
-            order.setType(c.getString(c.getColumnIndex("TYPE")));
-            order.setName(c.getString(c.getColumnIndex("NAME")));
-            order.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            order.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            order.setHj(c.getString(c.getColumnIndex("HJ")));
-            order.setResult(c.getString(c.getColumnIndex("RESULT")));
+            order.setConsigneerealname(c.getString(c.getColumnIndex("CONSIGNEEREALNAME")));
+            order.setConsigneeaddress(c.getString(c.getColumnIndex("CONSIGNEEADDRESS")));
+            order.setConsigneephone(c.getString(c.getColumnIndex("CONSIGNEEPHONE")));
+            order.setPaymenttype(c.getString(c.getColumnIndex("PAYMENTTYLE")));
+            order.setOrderdate(c.getString(c.getColumnIndex("ORDERDATE")));
+            order.setOrderstate(c.getString(c.getColumnIndex("ORDERSTATE")));
+            order.setProductimg(c.getString(c.getColumnIndex("PRODUCTIMG")));
+            order.setProductname(c.getString(c.getColumnIndex("PRODUCTNAME")));
+            order.setProductprice(c.getString(c.getColumnIndex("PRODUCTPRICE")));
+            order.setProductnum(c.getString(c.getColumnIndex("PRODUCTNUM")));
         }
         c.close();
         close();
@@ -487,15 +900,18 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM MYORDER", null);
         while (c.moveToNext()) {
             order = new Order();
-            order.setUserid(c.getString(c.getColumnIndex("USERID")));
+            order.setId(c.getString(c.getColumnIndex("ID")));
             order.setOrderid(c.getString(c.getColumnIndex("ORDERID")));
-            order.setProid(c.getString(c.getColumnIndex("PROID")));
-            order.setType(c.getString(c.getColumnIndex("TYPE")));
-            order.setName(c.getString(c.getColumnIndex("NAME")));
-            order.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            order.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            order.setHj(c.getString(c.getColumnIndex("HJ")));
-            order.setResult(c.getString(c.getColumnIndex("RESULT")));
+            order.setConsigneerealname(c.getString(c.getColumnIndex("CONSIGNEEREALNAME")));
+            order.setConsigneeaddress(c.getString(c.getColumnIndex("CONSIGNEEADDRESS")));
+            order.setConsigneephone(c.getString(c.getColumnIndex("CONSIGNEEPHONE")));
+            order.setPaymenttype(c.getString(c.getColumnIndex("PAYMENTTYLE")));
+            order.setOrderdate(c.getString(c.getColumnIndex("ORDERDATE")));
+            order.setOrderstate(c.getString(c.getColumnIndex("ORDERSTATE")));
+            order.setProductimg(c.getString(c.getColumnIndex("PRODUCTIMG")));
+            order.setProductname(c.getString(c.getColumnIndex("PRODUCTNAME")));
+            order.setProductprice(c.getString(c.getColumnIndex("PRODUCTPRICE")));
+            order.setProductnum(c.getString(c.getColumnIndex("PRODUCTNUM")));
             list.add(order);
         }
         c.close();
@@ -503,30 +919,35 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<Order> queryOrderByUserid(String userId) {
-        System.out.println("#SU DB# queryOrderByUserid");
-        List<Order> list = new ArrayList<Order>();
-        Order order = new Order();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] param = { userId };
-        Cursor c = db.rawQuery("SELECT * FROM MYORDER WHERE USERID = ?", param);
-        while (c.moveToNext()) {
-            order = new Order();
-            order.setUserid(c.getString(c.getColumnIndex("USERID")));
-            order.setOrderid(c.getString(c.getColumnIndex("ORDERID")));
-            order.setProid(c.getString(c.getColumnIndex("PROID")));
-            order.setType(c.getString(c.getColumnIndex("TYPE")));
-            order.setName(c.getString(c.getColumnIndex("NAME")));
-            order.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            order.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            order.setHj(c.getString(c.getColumnIndex("HJ")));
-            order.setResult(c.getString(c.getColumnIndex("RESULT")));
-            list.add(order);
-        }
-        c.close();
-        close();
-        return list;
-    }
+//    public List<Order> queryOrderByUserid(String userId) {
+//        System.out.println("#SU DB# queryOrderByUserid");
+//        List<Order> list = new ArrayList<Order>();
+//        Order order = new Order();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] param = { userId };
+//        Cursor c = db.rawQuery("SELECT * FROM MYORDER WHERE USERID = ?", param);
+//        while (c.moveToNext()) {
+//            order = new Order();
+//          order.setId(c.getString(c.getColumnIndex("ID")));
+//          order.setOrderid(c.getString(c.getColumnIndex("ORDERID")));
+//          order.setConsigneerealname(c.getString(c.getColumnIndex("CONSIGNEEREALNAME")));
+//          order.setConsigneeaddress(c.getString(c.getColumnIndex("CONSIGNEEADDRESS")));
+//          order.setConsigneephone(c.getString(c.getColumnIndex("CONSIGNEEPHONE")));
+//          order.setPaymenttype(c.getString(c.getColumnIndex("PAYMENTTYLE")));
+//          order.setOrderdate(c.getString(c.getColumnIndex("ORDERDATE")));
+//          order.setOrderstate(c.getString(c.getColumnIndex("ORDERSTATE")));
+//          order.setProductimg(c.getString(c.getColumnIndex("PRODUCTIMG")));
+//          order.setProductname(c.getString(c.getColumnIndex("PRODUCTNAME")));
+//          order.setProductprice(c.getString(c.getColumnIndex("PRODUCTPRICE")));
+//          order.setProductnum(c.getString(c.getColumnIndex("PRODUCTNUM")));
+//            list.add(order);
+//        }
+//        c.close();
+//        close();
+//        return list;
+//    }
+    
+    
     //
     // public void updateOrder(String OrderName, String StartDate) {
     // ContentValues cv = new ContentValues();
@@ -560,18 +981,37 @@ public class DBHelper extends SQLiteOpenHelper {
         System.out.println("#SU DB# insertCart");
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("USERID", cart.getUserid());
-        values.put("CARTID", cart.getCartid());
-        values.put("PROID", cart.getProid());
+        values.put("IMAGE", cart.getImage());
+        values.put("ID", cart.getId());
         values.put("NAME", cart.getName());
         values.put("PRICE", cart.getPrice());
-        values.put("THUMB", cart.getThumb());
-        values.put("HJ", cart.getHj());
-        values.put("COUNT", cart.getCount());
+        values.put("QUANTITY", cart.getQuantity());
+        values.put("TOTALPRICE", cart.getTotalprice());
+        values.put("SHOPID", cart.getShopid());
         db.insert("CART", "", values);
         close();
     }
+ 
 
+    public void insCartList(List<Cart> data) {
+        System.out.println("#SU DB# insCartList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("IMAGE", data.get(i).getImage());
+            values.put("ID", data.get(i).getId());
+            values.put("NAME", data.get(i).getName());
+            values.put("PRICE", data.get(i).getPrice());
+            values.put("QUANTITY", data.get(i).getQuantity());
+            values.put("TOTALPRICE", data.get(i).getTotalprice());
+            values.put("SHOPID", data.get(i).getShopid());
+            db.insert("CART", "", values);
+
+        }
+        close();
+    }
+
+    
     public Cart queryCartById(String cartId) {
         System.out.println("#SU DB# queryCartById");
         Cart cart = new Cart();
@@ -580,14 +1020,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM CART WHERE ID = ?", param);
         while (c.moveToNext()) {
             cart = new Cart();
-            cart.setUserid(c.getString(c.getColumnIndex("USERID")));
-            cart.setCartid(c.getString(c.getColumnIndex("CARTID")));
-            cart.setProid(c.getString(c.getColumnIndex("PROID")));
-            cart.setCount(c.getString(c.getColumnIndex("COUNT")));
+            cart.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            cart.setId(c.getString(c.getColumnIndex("ID")));
             cart.setName(c.getString(c.getColumnIndex("NAME")));
             cart.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            cart.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            cart.setHj(c.getString(c.getColumnIndex("HJ")));
+            cart.setQuantity(c.getString(c.getColumnIndex("QUANTITY")));
+            cart.setTotalprice(c.getString(c.getColumnIndex("TOTALPRICE")));
+            cart.setShopid(c.getString(c.getColumnIndex("SHOPID")));
         }
         c.close();
         close();
@@ -602,14 +1041,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM CART", null);
         while (c.moveToNext()) {
             cart = new Cart();
-            cart.setUserid(c.getString(c.getColumnIndex("USERID")));
-            cart.setCartid(c.getString(c.getColumnIndex("CARTID")));
-            cart.setProid(c.getString(c.getColumnIndex("PROID")));
-            cart.setCount(c.getString(c.getColumnIndex("COUNT")));
+            cart.setImage(c.getString(c.getColumnIndex("IMAGE")));
+            cart.setId(c.getString(c.getColumnIndex("ID")));
             cart.setName(c.getString(c.getColumnIndex("NAME")));
             cart.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            cart.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            cart.setHj(c.getString(c.getColumnIndex("HJ")));
+            cart.setQuantity(c.getString(c.getColumnIndex("QUANTITY")));
+            cart.setTotalprice(c.getString(c.getColumnIndex("TOTALPRICE")));
+            cart.setShopid(c.getString(c.getColumnIndex("SHOPID")));
             list.add(cart);
         }
         c.close();
@@ -617,30 +1055,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<Cart> queryCartByUserid(String userId) {
-        System.out.println("#SU DB# queryCartByUserid");
-        List<Cart> list = new ArrayList<Cart>();
-        Cart cart = new Cart();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] param = { userId };
-        Cursor c = db.rawQuery("SELECT * FROM CART WHERE USERID = ?", param);
-        while (c.moveToNext()) {
-            cart = new Cart();
-            cart.setUserid(c.getString(c.getColumnIndex("USERID")));
-            cart.setCartid(c.getString(c.getColumnIndex("CARTID")));
-            cart.setProid(c.getString(c.getColumnIndex("PROID")));
-            cart.setCount(c.getString(c.getColumnIndex("COUNT")));
-            cart.setName(c.getString(c.getColumnIndex("NAME")));
-            cart.setPrice(c.getString(c.getColumnIndex("PRICE")));
-            cart.setThumb(c.getString(c.getColumnIndex("THUMB")));
-            cart.setHj(c.getString(c.getColumnIndex("HJ")));
-            list.add(cart);
-        }
-        c.close();
-        close();
-        return list;
-    }
-    //
+//    public List<Cart> queryCartByUserid(String userId) {
+//        System.out.println("#SU DB# queryCartByUserid");
+//        List<Cart> list = new ArrayList<Cart>();
+//        Cart cart = new Cart();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] param = { userId };
+//        Cursor c = db.rawQuery("SELECT * FROM CART WHERE USERID = ?", param);
+//        while (c.moveToNext()) {
+//            cart = new Cart();
+//            cart.setImage(c.getString(c.getColumnIndex("IMAGE")));
+//            cart.setId(c.getString(c.getColumnIndex("ID")));
+//            cart.setName(c.getString(c.getColumnIndex("NAME")));
+//            cart.setPrice(c.getString(c.getColumnIndex("PRICE")));
+//            cart.setQuantity(c.getString(c.getColumnIndex("QUANTITY")));
+//            cart.setTotalprice(c.getString(c.getColumnIndex("TOTALPRICE")));
+//            list.add(cart);
+//        }
+//        c.close();
+//        close();
+//        return list;
+//    }
+    
+    
     // public void updateCart(String CartName, String StartDate) {
     // ContentValues cv = new ContentValues();
     // cv.put("STATUS", "1");
@@ -740,16 +1177,35 @@ public class DBHelper extends SQLiteOpenHelper {
         System.out.println("#SU DB# insertAddress");
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("USERID", address.getUserid());
-        values.put("ADDID", address.getAddid());
-        values.put("IFDEFAULT", address.getIfdefault());
-        values.put("NAME", address.getName());
-        values.put("PHONE", address.getPhone());
-        values.put("ADDINFO", address.getAddinfo());
+        values.put("ADDRESS", address.getAddress());
+        values.put("CITY", address.getCity());
+        values.put("ID", address.getId());
+        values.put("MOBILE", address.getMobile());
+        values.put("PROVINCE", address.getProvince());
+        values.put("STAT", address.getStat());
+        values.put("USERNAME", address.getUsername());
         db.insert("ADDRESS", "", values);
         close();
     }
 
+    public void insAddressList(List<Address> data) {
+        System.out.println("#SU DB# insAddressList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("ADDRESS", data.get(i).getAddress());
+            values.put("CITY", data.get(i).getCity());
+            values.put("ID", data.get(i).getId());
+            values.put("MOBILE", data.get(i).getMobile());
+            values.put("PROVINCE", data.get(i).getProvince());
+            values.put("STAT", data.get(i).getStat());
+            values.put("USERNAME", data.get(i).getUsername());
+            db.insert("ADDRESS", "", values);
+
+        }
+        close();
+    }
+    
     public Address queryAddressById(String addId) {
         System.out.println("#SU DB# queryAddressById");
         Address address = new Address();
@@ -758,12 +1214,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM ADDRESS WHERE ID = ?", param);
         while (c.moveToNext()) {
             address = new Address();
-            address.setUserid(c.getString(c.getColumnIndex("USERID")));
-            address.setAddid(c.getString(c.getColumnIndex("ADDID")));
-            address.setIfdefault(c.getString(c.getColumnIndex("IFDEFAULT")));
-            address.setName(c.getString(c.getColumnIndex("NAME")));
-            address.setPhone(c.getString(c.getColumnIndex("PHONE")));
-            address.setAddinfo(c.getString(c.getColumnIndex("ADDINFO")));
+            address.setAddress(c.getString(c.getColumnIndex("ADDRESS")));
+            address.setCity(c.getString(c.getColumnIndex("CITY")));
+            address.setId(c.getString(c.getColumnIndex("ID")));
+            address.setMobile(c.getString(c.getColumnIndex("MOBILE")));
+            address.setProvince(c.getString(c.getColumnIndex("PROVINCE")));
+            address.setStat(c.getString(c.getColumnIndex("STAT")));
+            address.setUsername(c.getString(c.getColumnIndex("USERNAME")));
         }
         c.close();
         close();
@@ -778,12 +1235,13 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = db.rawQuery("SELECT * FROM ADDRESS", null);
         while (c.moveToNext()) {
             address = new Address();
-            address.setUserid(c.getString(c.getColumnIndex("USERID")));
-            address.setAddid(c.getString(c.getColumnIndex("ADDID")));
-            address.setIfdefault(c.getString(c.getColumnIndex("IFDEFAULT")));
-            address.setName(c.getString(c.getColumnIndex("NAME")));
-            address.setPhone(c.getString(c.getColumnIndex("PHONE")));
-            address.setAddinfo(c.getString(c.getColumnIndex("ADDINFO")));
+            address.setAddress(c.getString(c.getColumnIndex("ADDRESS")));
+            address.setCity(c.getString(c.getColumnIndex("CITY")));
+            address.setId(c.getString(c.getColumnIndex("ID")));
+            address.setMobile(c.getString(c.getColumnIndex("MOBILE")));
+            address.setProvince(c.getString(c.getColumnIndex("PROVINCE")));
+            address.setStat(c.getString(c.getColumnIndex("STAT")));
+            address.setUsername(c.getString(c.getColumnIndex("USERNAME")));
             list.add(address);
         }
         c.close();
@@ -791,27 +1249,29 @@ public class DBHelper extends SQLiteOpenHelper {
         return list;
     }
 
-    public List<Address> queryAddressByUserid(String userId) {
-        System.out.println("#SU DB# queryAddressByUserid");
-        List<Address> list = new ArrayList<Address>();
-        Address address = new Address();
-        SQLiteDatabase db = this.getReadableDatabase();
-        String[] param = { userId };
-        Cursor c = db.rawQuery("SELECT * FROM ADDRESS WHERE USERID = ?", param);
-        while (c.moveToNext()) {
-            address = new Address();
-            address.setUserid(c.getString(c.getColumnIndex("USERID")));
-            address.setAddid(c.getString(c.getColumnIndex("ADDID")));
-            address.setIfdefault(c.getString(c.getColumnIndex("IFDEFAULT")));
-            address.setName(c.getString(c.getColumnIndex("NAME")));
-            address.setPhone(c.getString(c.getColumnIndex("PHONE")));
-            address.setAddinfo(c.getString(c.getColumnIndex("ADDINFO")));
-            list.add(address);
-        }
-        c.close();
-        close();
-        return list;
-    }
+//    public List<Address> queryAddressByUserid(String userId) {
+//        System.out.println("#SU DB# queryAddressByUserid");
+//        List<Address> list = new ArrayList<Address>();
+//        Address address = new Address();
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String[] param = { userId };
+//        Cursor c = db.rawQuery("SELECT * FROM ADDRESS WHERE USERID = ?", param);
+//        while (c.moveToNext()) {
+//            address = new Address();
+//            address.setUserid(c.getString(c.getColumnIndex("USERID")));
+//            address.setAddid(c.getString(c.getColumnIndex("ADDID")));
+//            address.setIfdefault(c.getString(c.getColumnIndex("IFDEFAULT")));
+//            address.setName(c.getString(c.getColumnIndex("NAME")));
+//            address.setPhone(c.getString(c.getColumnIndex("PHONE")));
+//            address.setAddinfo(c.getString(c.getColumnIndex("ADDINFO")));
+//            list.add(address);
+//        }
+//        c.close();
+//        close();
+//        return list;
+//    }
+    
+    
     //
     // public void updateAddress(String AddressName, String StartDate) {
     // ContentValues cv = new ContentValues();
@@ -848,12 +1308,29 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("AREAID", area.getAreaid());
+        values.put("ADDRESS", area.getAddress());
         values.put("IMG", area.getImg());
-        values.put("NAME", area.getName());
         db.insert("AREA", "", values);
         close();
     }
 
+    
+    public void insAreaList(List<Area> data) {
+        System.out.println("#SU DB# insAreaList");
+        SQLiteDatabase db = getWritableDatabase();
+        for (int i = 0; i < data.size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put("AREAID", data.get(i).getAreaid());
+            values.put("ADDRESS", data.get(i).getAddress());
+            values.put("IMG", data.get(i).getImg());
+            db.insert("AREA", "", values);
+
+        }
+        close();
+    }
+
+    
+    
     public Area queryAreaById(String areaId) {
         System.out.println("#SU DB# queryAreaById");
         Area area = new Area();
@@ -863,8 +1340,8 @@ public class DBHelper extends SQLiteOpenHelper {
         while (c.moveToNext()) {
             area = new Area();
             area.setAreaid(c.getString(c.getColumnIndex("AREAID")));
+            area.setAddress(c.getString(c.getColumnIndex("ADDRESS")));
             area.setImg(c.getString(c.getColumnIndex("IMG")));
-            area.setName(c.getString(c.getColumnIndex("NAME")));
         }
         c.close();
         close();
@@ -880,8 +1357,8 @@ public class DBHelper extends SQLiteOpenHelper {
         while (c.moveToNext()) {
             area = new Area();
             area.setAreaid(c.getString(c.getColumnIndex("AREAID")));
+            area.setAddress(c.getString(c.getColumnIndex("ADDRESS")));
             area.setImg(c.getString(c.getColumnIndex("IMG")));
-            area.setName(c.getString(c.getColumnIndex("NAME")));
             list.add(area);
         }
         c.close();

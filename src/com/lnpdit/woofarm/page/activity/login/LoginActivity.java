@@ -3,10 +3,10 @@ package com.lnpdit.woofarm.page.activity.login;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.hp.hpl.sparta.Text;
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.base.component.BaseActivity;
-import com.lnpdit.woofarm.entity.LoginUser;
+import com.lnpdit.woofarm.db.DBHelper;
+import com.lnpdit.woofarm.entity.UserInfo;
 import com.lnpdit.woofarm.http.SoapRes;
 import com.lnpdit.woofarm.md5.MD5Plus;
 import com.lnpdit.woofarm.page.activity.tabhost.MainTabHostActivity;
@@ -15,6 +15,7 @@ import com.lnpdit.woofarm.utils.SOAP_UTILS;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
@@ -33,6 +34,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
     Button login_bt;
     private TextView tvRigister;
     private TextView tvForget;
+    private DBHelper dbh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
         setContentView(R.layout.activity_login);
 
         context = this;
+        dbh = new DBHelper(this);
         initView();
 
     }
@@ -140,24 +143,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
      * @param password
      */
     private void login_validate(String username, String password) {
-        if (username == null || username.equals("")) {
-            Toast.makeText(this, "用户名为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (password == null || password.equals("")) {
-            Toast.makeText(this, "密码为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // Object[] property_va = { username_edit.getText().toString(),
-        // password_edit.getText().toString() };
-        // soapService.userLogin(property_va);
-        String[] property_va = new String[] { "13940226591", "2" };
+//        if (username == null || username.equals("")) {
+//            Toast.makeText(this, "用户名为空", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (password == null || password.equals("")) {
+//            Toast.makeText(this, "密码为空", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        
+//         Object[] property_va = { username_edit.getText().toString(),
+//         password_edit.getText().toString() };
+//         soapService.userLogin(property_va);
+//        String[] property_va = new String[] { "13940226591", "2" };
+//        soapService.userLogin(property_va);
+
+        String[] property_va = new String[] { "18604046566", "111111" };
         soapService.userLogin(property_va);
         
-        Intent intent_login = new Intent();
-        intent_login.setClass(context, MainTabHostActivity.class);
-        startActivity(intent_login);
-        finish();
     }
 
     /**
@@ -197,6 +200,28 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                   String userid= json_obj.get("id").toString();
                   String nickname= json_obj.get("nicheng").toString();
                   String memberlogo= json_obj.get("memberlogo").toString();
+                  
+                  // 保存登陆用户名
+                  SharedPreferences sharedPreferences = getSharedPreferences("userinfo",
+                          MODE_PRIVATE);
+                  Editor editor = sharedPreferences.edit(); //获取编辑器
+                  editor.putString("userid", userid);
+                  editor.putString("nickname", nickname);
+                  editor.putString("memberlogo", memberlogo);
+                  editor.commit();//提交修改
+                  
+                  UserInfo loginUser = new UserInfo();
+                  loginUser.setHeadpic(memberlogo);
+                  loginUser.setUserid(userid);
+                  loginUser.setUsername(nickname);
+                  
+                  dbh.clearUserInfoData();
+                  dbh.insUserInfo(loginUser);
+                  
+                  Intent intent_login = new Intent();
+                  intent_login.setClass(context, MainTabHostActivity.class);
+                  startActivity(intent_login);
+                  finish();
 //                    {"status":"true","msg":"登录成功","id":"13","nicheng":"1","memberlogo":"1"}
                     
                 // LoginUser loginUser = (LoginUser) res.getObj();

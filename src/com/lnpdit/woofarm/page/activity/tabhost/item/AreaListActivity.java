@@ -3,41 +3,30 @@ package com.lnpdit.woofarm.page.activity.tabhost.item;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.eroad.widget.calendar.CalanderActivity;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import com.lnpdit.woofarm.R;
+import com.lnpdit.woofarm.base.component.BaseActivity;
 import com.lnpdit.woofarm.db.DBHelper;
 import com.lnpdit.woofarm.entity.Area;
-import com.lnpdit.woofarm.entity.Cart;
-import com.lnpdit.woofarm.entity.DataInfoUn;
 import com.lnpdit.woofarm.http.SoapRes;
-import com.lnpdit.woofarm.page.activity.video.RealPlayActivity;
 import com.lnpdit.woofarm.page.adapter.AreaListAdapter;
-import com.lnpdit.woofarm.page.adapter.CartListAdapter;
-import com.lnpdit.woofarm.page.adapter.MonitorListAdapter;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase;
 import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
-import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.lnpdit.woofarm.utils.SOAP_UTILS;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class AreaListActivity extends Activity {
+public class AreaListActivity extends BaseActivity {
     /** Called when the activity is first created. */
 
     private DBHelper dbh;
     Button m_btLogin;
-    private PullToRefreshListView listview_monitorlist;
     private ListView areaListView;
-    private int pageIndex = 1;
     Context context;
     private Area area;
     private List<Area> areaList;
@@ -61,7 +50,14 @@ public class AreaListActivity extends Activity {
     }
 
     private void initData() {
+        getDBData();
 
+        String[] property_va= new String[] {};
+        soapService.getShopList(property_va);
+    }
+
+    
+    private void getDBData() {
         dbh = new DBHelper(this);
         area = new Area();
         areaList = new ArrayList<Area>();
@@ -71,5 +67,48 @@ public class AreaListActivity extends Activity {
         arealistAdapter = new AreaListAdapter(context, areaList);
         areaListView.setAdapter(arealistAdapter);
     }
+    
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.GETSHOPLIST)) {
+            if (obj.getObj() != null) {
+                try {
+                    
+                JSONObject json_obj = new JSONObject(obj.getObj().toString());
 
+                String result = json_obj.get("status").toString();
+                JSONArray message_array = json_obj.getJSONArray("msg");
+             
+                areaList = new ArrayList<Area>();
+                if(result.equals("true")){
+                    
+                    for (int i = 0; i < message_array.length(); i++) {
+                        JSONObject json_news = (JSONObject) message_array.get(i);
+                        Area hpn = new Area();
+                        hpn.setAreaid(json_news.get("id").toString());
+                        hpn.setAddress(json_news.get("address").toString());
+                        hpn.setImg(json_news.get("image").toString());
+
+                        areaList.add(hpn);
+                    }
+                    }else{
+                        String result_str = json_obj.get("msg").toString();
+                        Toast.makeText(context, result_str, Toast.LENGTH_SHORT).show();
+                    }
+                dbh.clearAllArea();
+                if (areaList.size() != 0) {
+
+                    dbh.insAreaList(areaList);
+                }else{
+                    areaListView.setAdapter(null);
+                }
+                
+                getDBData();
+                } catch (Exception e) {
+                    // TODO: handle exception
+                }
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        }
+     }
 }

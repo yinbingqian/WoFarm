@@ -1,21 +1,29 @@
 package com.lnpdit.woofarm.page.activity.product;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.base.component.BaseActivity;
 import com.lnpdit.woofarm.db.DBHelper;
 import com.lnpdit.woofarm.entity.Order;
+import com.lnpdit.woofarm.entity.ProductByClass;
+import com.lnpdit.woofarm.entity.ProductRow;
 import com.lnpdit.woofarm.http.SoapRes;
 import com.lnpdit.woofarm.page.adapter.MyOrderListAdapter;
+import com.lnpdit.woofarm.page.adapter.ProductListAdapter;
 import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase;
 import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
 import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.lnpdit.woofarm.utils.SOAP_UTILS;
 import com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +33,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * 我的订单
@@ -32,7 +41,7 @@ import android.widget.TextView;
  * @author yinbingqian 类名称：MyOrderActivity 创建时间:2016-10-29
  */
 
-public class MyOrderActivity extends Activity implements OnClickListener {
+public class MyOrderActivity extends BaseActivity implements OnClickListener {
     /** Called when the activity is first created. */
 
     private PullToRefreshListView listview_myorderlist;
@@ -45,13 +54,19 @@ public class MyOrderActivity extends Activity implements OnClickListener {
     private MyOrderListAdapter myorderlistAdapter;
     ImageView img_back;
     TextView tv_back;
+    
+    private int pageIndex = 1;
+    private String memberid = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.activity_myorder);
-
+        
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
+        
         initView();
         initData();
         setListeners();
@@ -72,14 +87,27 @@ public class MyOrderActivity extends Activity implements OnClickListener {
     }
 
     private void initData() {
+        getDBData();
+        if(memberid.equals("")||memberid.equals(null)){
+            Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+        }else{
 
-        dbh = new DBHelper(this);
-        myorderList = dbh.queryOrder();
-
-        myorderlistAdapter = new MyOrderListAdapter(context, myorderList);
-        myorderListView.setAdapter(myorderlistAdapter);
+            String[] property_va = new String[] {memberid , "10", pageIndex + ""};
+            soapService.getOrderListByMember(property_va, false);
+        }
     }
 
+    private void getDBData() {
+        dbh = new DBHelper(this);
+        myorderList = dbh.queryOrder();
+      if(myorderList.size()!=0){
+         myorderlistAdapter = new MyOrderListAdapter(context, myorderList);
+         myorderListView.setAdapter(myorderlistAdapter);
+         }else{
+             myorderListView.setAdapter(null);
+        }
+   }
+    
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -127,32 +155,60 @@ public class MyOrderActivity extends Activity implements OnClickListener {
 
                     @Override
                     public void onLastItemVisible() {
-                        // String[] property_va = new String[] { "10",
-                        // ++pageIndex + "" };
-                        // soapService.GetDateListUn(property_va, true);
+                        
+                         String[] property_va = new String[] {memberid , "10", ++pageIndex + ""};
+                         soapService.getOrderListByMember(property_va, true);
 
                     }
                 });
     }
 
     public void onEvent(SoapRes obj) {
-        // if (obj.getCode().equals(SOAP_UTILS.METHOD.GETDATELISTUN)) {
-        // if (obj.isPage()) {
-        // for (DataInfoUn bean : (List<DataInfoUn>) obj.getObj()) {
-        // monitorList.add(bean);
-        // }
-        // monitorlistAdapter.notifyDataSetChanged();
-        // } else {
-        // monitorList = (List<DataInfoUn>) obj.getObj();
-        // if (monitorList != null) {
-        // if (monitorList.size() != 0) {
-        // monitorlistAdapter = new MonitorListAdapter(context,monitorList);
-        // monitorListView.setAdapter(monitorlistAdapter);
-        // }
-        // }
-        // }
-        // listview_monitorlist.onRefreshComplete();
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.GETORDERLISTBYMEMBER)) {
+            listview_myorderlist.onRefreshComplete();
+            if (obj.getObj() != null) {
+                if(obj.getObj().equals("false")){
+                    Toast.makeText(context, "获取数据失败", Toast.LENGTH_SHORT).show();  
+                }else{
+                if (obj.isPage()) {
+                    for (Order bean : (List<Order>) obj.getObj()) {
+                        myorderList.add(bean);
+                    }
+                    myorderlistAdapter.notifyDataSetChanged();
+                } else {
+                    myorderList = (List<Order>) obj.getObj();
+                    if (myorderList.size() != 0) {
+
+                        dbh.clearAllOrder();
+                        dbh.insOrderList(myorderList);
+                        pageIndex = 1;
+                    }
+                    getDBData();
+                }
+                }
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.DELETEORDERBYID)) {
+            if (obj.getObj() != null) {
+                try {
+                JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                String result = json_obj.get("status").toString();
+                String message = json_obj.get("msg").toString();
+                if(result.equals("true")){
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                }else{
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                }
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
-    // }
 
 }

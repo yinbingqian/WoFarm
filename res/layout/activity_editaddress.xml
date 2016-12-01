@@ -46,26 +46,46 @@
             android:text="编辑地址"
             android:textColor="@color/white"
             android:textSize="17sp" />
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="保存"
+            android:textColor="@color/white"
+            android:textSize="17dp" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:background="@color/white"
-        android:paddingRight="35dp" >
-
+        android:paddingRight="25dp" >
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:text="收货人"
+            android:textColor="@color/gray_text"
+            android:textColorHint="@color/gray_text"
+            android:textSize="17sp" />
         <EditText
             android:id="@+id/phone_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="100dp"
+            android:gravity="right|center"
             android:background="@null"
-            android:hint="收货人"
+            android:hint=""
             android:inputType="textNoSuggestions"
             android:singleLine="true"
             android:textColor="@color/gray_text"
-            android:textColorHint="@color/gray_text"
             android:textSize="17sp" />
     </RelativeLayout>
 
@@ -79,20 +99,28 @@
         android:layout_width="match_parent"
         android:layout_height="44dp"
         android:layout_gravity="center_vertical"
+        android:paddingRight="25dp"
         android:background="@color/white" >
-
+<TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:text="联系电话"
+            android:textColor="@color/gray_text"
+            android:textColorHint="@color/gray_text"
+            android:textSize="17sp" />
         <EditText
             android:id="@+id/code_edit"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="100dp"
+            android:gravity="right|center"
             android:background="@null"
-            android:hint="联系电话"
-            android:inputType="textPassword"
+            android:hint=""
             android:singleLine="true"
             android:textColor="@color/gray_text"
-            android:textColorHint="@color/gray_text"
             android:textSize="17sp" />
     </RelativeLayout>
 
@@ -149,41 +177,31 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="44dp"
-        android:background="@color/white" >
-
+        android:background="@color/white" 
+        android:paddingRight="25dp">
+<TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_centerVertical="true"
+            android:text="详细地址"
+            android:textColor="@color/gray_text"
+            android:textColorHint="@color/gray_text"
+            android:textSize="17sp" />
         <EditText
             android:id="@+id/password_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="100dp"
             android:background="@null"
-            android:hint="街道"
+            android:hint=""
             android:inputType="textNoSuggestions"
             android:singleLine="true"
-            android:textColor="@color/gray_text"
-            android:textColorHint="@color/gray_text"
-            android:textSize="17sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="7dp"
-            android:layout_toLeftOf="@+id/next2_btn"
-            android:gravity="center"
-            android:text="请选择"
+            android:gravity="right|center"
             android:textColor="@color/gray_text"
             android:textSize="17sp" />
 
-        <ImageView
-            android:id="@+id/next2_btn"
-            android:layout_width="15dp"
-            android:layout_height="21dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/mm_submenu" />
     </RelativeLayout>
 
     <LinearLayout

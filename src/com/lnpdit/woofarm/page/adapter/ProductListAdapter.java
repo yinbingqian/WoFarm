@@ -8,6 +8,7 @@ import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.entity.DataInfoUn;
 import com.lnpdit.woofarm.entity.Product;
 import com.lnpdit.woofarm.entity.ProductRow;
+import com.lnpdit.woofarm.instance.Instance;
 import com.lnpdit.woofarm.page.activity.product.ProductInfoActivity;
 
 import android.annotation.SuppressLint;
@@ -108,27 +109,13 @@ public class ProductListAdapter extends BaseAdapter {
 
         holder.productname1_tv.setText(appInfo.getName1());
         holder.productprice1_tv.setText("¥ " + appInfo.getPrice1());
-        int value1 = 0;
-        int value2 = 0;
-        Class<R.drawable> cls = R.drawable.class;
-        try {
-            value1 = cls.getDeclaredField(appInfo.getThumb1()).getInt(null);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        holder.imageView1.setImageResource(value1);
+        String imgPath1 = appInfo.getThumb1();
+        Instance.imageLoader.displayImage(imgPath1,holder.imageView1, Instance.user_s_options);
         if (!appInfo.getName2().equals("none")) {
             holder.productname2_tv.setText(appInfo.getName2());
             holder.productprice2_tv.setText("¥ " + appInfo.getPrice2());
-
-            try {
-                value2 = cls.getDeclaredField(appInfo.getThumb2()).getInt(null);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            holder.imageView2.setImageResource(value2);
+            String imgPath2 = appInfo.getThumb2();
+            Instance.imageLoader.displayImage(imgPath2, holder.imageView2, Instance.user_s_options);
         } else {
             holder.productname2_tv.setVisibility(TextView.GONE);
             holder.productprice2_tv.setVisibility(TextView.GONE);
@@ -142,6 +129,7 @@ public class ProductListAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.setClass(mContext, ProductInfoActivity.class);
                 intent.putExtra("name", appInfo.getName1());
+                intent.putExtra("productid", appInfo.getProid1());
                 mContext.startActivity(intent);
             }
         });
@@ -152,6 +140,7 @@ public class ProductListAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.setClass(mContext, ProductInfoActivity.class);
                 intent.putExtra("name", appInfo.getName1());
+                intent.putExtra("productid", appInfo.getProid1());
                 mContext.startActivity(intent);
             }
         });
@@ -162,6 +151,7 @@ public class ProductListAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.setClass(mContext, ProductInfoActivity.class);
                 intent.putExtra("name", appInfo.getName2());
+                intent.putExtra("productid", appInfo.getProid2());
                 mContext.startActivity(intent);
             }
         });
@@ -172,6 +162,7 @@ public class ProductListAdapter extends BaseAdapter {
                 Intent intent = new Intent();
                 intent.setClass(mContext, ProductInfoActivity.class);
                 intent.putExtra("name", appInfo.getName2());
+                intent.putExtra("productid", appInfo.getProid2());
                 mContext.startActivity(intent);
             }
         });

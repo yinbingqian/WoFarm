@@ -26,7 +26,7 @@ import com.lnpdit.woofarm.page.activity.product.ProductConfirmActivity;
 import com.lnpdit.woofarm.page.activity.product.ProductOrderActivity;
 
 /**
- * Main
+ * 首页日历
  * 
  * @author MaJian
  *

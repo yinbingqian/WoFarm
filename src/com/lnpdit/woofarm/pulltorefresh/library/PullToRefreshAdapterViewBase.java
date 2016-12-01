@@ -31,6 +31,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -216,7 +217,11 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extend
 	public final void setOnLastItemVisibleListener(OnLastItemVisibleListener listener) {
 		mOnLastItemVisibleListener = listener;
 	}
-
+	
+	public void setOnItemLongClickListener(OnItemLongClickListener listener){  
+        mRefreshableView.setOnItemLongClickListener(listener);  
+    } 
+	
 	public final void setOnScrollListener(OnScrollListener listener) {
 		mOnScrollListener = listener;
 	}

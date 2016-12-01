@@ -9,58 +9,20 @@ import android.widget.ImageView;
  * @version 2015年4月23日 上午11:32:53
  */
 public class ADInfo {
-    String id = "";
-    String url = "";
-    String content = "";
-    String type = "";
-    String title = "";
-    int img = 0;
-
-    public String getId() {
-        return id;
+    String image = "";
+    String linkaddress = "";
+    
+    public String getImage() {
+        return image;
     }
-
-    public void setId(String id) {
-        this.id = id;
+    public void setImage(String image) {
+        this.image = image;
     }
-
-    public String getUrl() {
-        return url;
+    public String getLinkaddress() {
+        return linkaddress;
     }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setLinkaddress(String linkaddress) {
+        this.linkaddress = linkaddress;
     }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public int getImg() {
-        return img;
-    }
-
-    public void setImg(int img) {
-        this.img = img;
-    }
+    
 }

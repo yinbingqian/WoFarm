@@ -11,6 +11,7 @@ import com.lnpdit.woofarm.entity.Order;
 import com.lnpdit.woofarm.entity.Product;
 import com.lnpdit.woofarm.http.RdaResultPack;
 import com.lnpdit.woofarm.mservice.UserService;
+import com.lnpdit.woofarm.page.activity.login.LoginActivity;
 import com.lnpdit.woofarm.page.activity.tabhost.MainTabHostActivity;
 
 import java.util.List;
@@ -58,8 +59,8 @@ public class WelcomeActivity extends BaseActivity {
                     writeEnter(WelcomeActivity.this);
                 } else {
                     Intent intent = new Intent();
-                    intent.setClass(getBaseContext(),
-                            MainTabHostActivity.class);
+                    intent.setClass(getBaseContext(),LoginActivity.class);
+//                    intent.setClass(getBaseContext(),MainTabHostActivity.class);
                     startActivity(intent);
                 }
 
@@ -88,10 +89,10 @@ public class WelcomeActivity extends BaseActivity {
         dbh.clearAllCamera();
 
         initProduct();
-        initOrder();
-        initCart();
-        initAddress();
-        initArea();
+//        initOrder();
+//        initCart();
+//        initAddress();
+//        initArea();
         initCamera();
 
     }
@@ -155,125 +156,125 @@ public class WelcomeActivity extends BaseActivity {
 
     }
 
-    private void initOrder() {
-        order.setUserid("1");
-        order.setOrderid("1");
-        order.setProid("1");
-        order.setType("水果类");
-        order.setName("白雪公主");
-        order.setPrice("4.5");
-        order.setThumb("cm1");
-        order.setHj("45");
-        order.setResult("交易成功");
-        dbh.insertOrder(order);
+//    private void initOrder() {
+//        order.setUserid("1");
+//        order.setOrderid("1");
+//        order.setProid("1");
+//        order.setType("水果类");
+//        order.setName("白雪公主");
+//        order.setPrice("4.5");
+//        order.setThumb("cm1");
+//        order.setHj("45");
+//        order.setResult("交易成功");
+//        dbh.insertOrder(order);
+//
+//        order.setUserid("1");
+//        order.setOrderid("2");
+//        order.setProid("1");
+//        order.setType("水果类");
+//        order.setName("甜查理");
+//        order.setPrice("4.5");
+//        order.setThumb("cm2");
+//        order.setHj("20");
+//        order.setResult("交易成功");
+//        dbh.insertOrder(order);
+//
+//        order.setUserid("1");
+//        order.setOrderid("3");
+//        order.setProid("1");
+//        order.setType("水果类");
+//        order.setName("甜查理");
+//        order.setPrice("4.5");
+//        order.setThumb("cm3");
+//        order.setHj("35");
+//        order.setResult("交易成功");
+//        dbh.insertOrder(order);
+//    }
 
-        order.setUserid("1");
-        order.setOrderid("2");
-        order.setProid("1");
-        order.setType("水果类");
-        order.setName("甜查理");
-        order.setPrice("4.5");
-        order.setThumb("cm2");
-        order.setHj("20");
-        order.setResult("交易成功");
-        dbh.insertOrder(order);
+//    private void initCart() {
+//        cart.setUserid("1");
+//        cart.setCartid("1");
+//        cart.setProid("1");
+//        cart.setCount("5");
+//        cart.setName("甜查理");
+//        cart.setPrice("4.5");
+//        cart.setThumb("cm1");
+//        cart.setHj("45");
+//        dbh.insertCart(cart);
+//
+//        cart.setUserid("1");
+//        cart.setCartid("2");
+//        cart.setProid("1");
+//        cart.setCount("4");
+//        cart.setName("桃熏");
+//        cart.setPrice("6.0");
+//        cart.setThumb("cm2");
+//        cart.setHj("18");
+//        dbh.insertCart(cart);
+//
+//        cart.setUserid("1");
+//        cart.setCartid("4");
+//        cart.setProid("1");
+//        cart.setCount("4");
+//        cart.setName("京藏香");
+//        cart.setPrice("8.0");
+//        cart.setThumb("cm3");
+//        cart.setHj("18");
+//        dbh.insertCart(cart);
+//
+//        cart.setUserid("1");
+//        cart.setCartid("4");
+//        cart.setProid("1");
+//        cart.setCount("4");
+//        cart.setName("京桃香");
+//        cart.setPrice("8.0");
+//        cart.setThumb("cm4");
+//        cart.setHj("18");
+//        dbh.insertCart(cart);
+//    }
+//
+//    private void initAddress() {
+//        address.setUserid("1");
+//        address.setAddid("1");
+//        address.setIfdefault("1");
+//        address.setName("白杰");
+//        address.setPhone("18831405840");
+//        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
+//        dbh.insertAddress(address);
+//
+//        address.setUserid("1");
+//        address.setAddid("2");
+//        address.setIfdefault("0");
+//        address.setName("白杰");
+//        address.setPhone("18831405840");
+//        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
+//        dbh.insertAddress(address);
+//
+//        address.setUserid("1");
+//        address.setAddid("3");
+//        address.setIfdefault("0");
+//        address.setName("白杰");
+//        address.setPhone("18831405840");
+//        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
+//        dbh.insertAddress(address);
+//    }
 
-        order.setUserid("1");
-        order.setOrderid("3");
-        order.setProid("1");
-        order.setType("水果类");
-        order.setName("甜查理");
-        order.setPrice("4.5");
-        order.setThumb("cm3");
-        order.setHj("35");
-        order.setResult("交易成功");
-        dbh.insertOrder(order);
-    }
-
-    private void initCart() {
-        cart.setUserid("1");
-        cart.setCartid("1");
-        cart.setProid("1");
-        cart.setCount("5");
-        cart.setName("甜查理");
-        cart.setPrice("4.5");
-        cart.setThumb("cm1");
-        cart.setHj("45");
-        dbh.insertCart(cart);
-
-        cart.setUserid("1");
-        cart.setCartid("2");
-        cart.setProid("1");
-        cart.setCount("4");
-        cart.setName("桃熏");
-        cart.setPrice("6.0");
-        cart.setThumb("cm2");
-        cart.setHj("18");
-        dbh.insertCart(cart);
-
-        cart.setUserid("1");
-        cart.setCartid("4");
-        cart.setProid("1");
-        cart.setCount("4");
-        cart.setName("京藏香");
-        cart.setPrice("8.0");
-        cart.setThumb("cm3");
-        cart.setHj("18");
-        dbh.insertCart(cart);
-
-        cart.setUserid("1");
-        cart.setCartid("4");
-        cart.setProid("1");
-        cart.setCount("4");
-        cart.setName("京桃香");
-        cart.setPrice("8.0");
-        cart.setThumb("cm4");
-        cart.setHj("18");
-        dbh.insertCart(cart);
-    }
-
-    private void initAddress() {
-        address.setUserid("1");
-        address.setAddid("1");
-        address.setIfdefault("1");
-        address.setName("白杰");
-        address.setPhone("18831405840");
-        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
-        dbh.insertAddress(address);
-
-        address.setUserid("1");
-        address.setAddid("2");
-        address.setIfdefault("0");
-        address.setName("白杰");
-        address.setPhone("18831405840");
-        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
-        dbh.insertAddress(address);
-
-        address.setUserid("1");
-        address.setAddid("3");
-        address.setIfdefault("0");
-        address.setName("白杰");
-        address.setPhone("18831405840");
-        address.setAddinfo("收货地址：沈阳市浑南新区金科街");
-        dbh.insertAddress(address);
-    }
-
-    private void initArea() {
-        area.setAreaid("1");
-        area.setImg("area1");
-        area.setName("前社草莓");
-        dbh.insertArea(area);
-
-        area.setAreaid("2");
-        area.setImg("area2");
-        area.setName("李官油桃");
-        dbh.insertArea(area);
-
-        area.setAreaid("4");
-        area.setImg("area3");
-        area.setName("铁岭食用菌");
-        dbh.insertArea(area);
-    }
+//    private void initArea() {
+//        area.setAreaid("1");
+//        area.setImg("area1");
+//        area.setName("前社草莓");
+//        dbh.insertArea(area);
+//
+//        area.setAreaid("2");
+//        area.setImg("area2");
+//        area.setName("李官油桃");
+//        dbh.insertArea(area);
+//
+//        area.setAreaid("4");
+//        area.setImg("area3");
+//        area.setName("铁岭食用菌");
+//        dbh.insertArea(area);
+//    }
 
     private void initCamera() {
         camera.setAreaid("1");

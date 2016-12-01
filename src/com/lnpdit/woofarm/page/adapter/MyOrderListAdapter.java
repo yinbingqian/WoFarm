@@ -4,8 +4,13 @@ import java.util.List;
 
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.entity.Order;
+import com.lnpdit.woofarm.http.ISoapService;
+import com.lnpdit.woofarm.http.SoapService;
+import com.lnpdit.woofarm.instance.Instance;
+import com.lnpdit.woofarm.page.activity.product.ProductInfoActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +19,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MyOrderListAdapter extends BaseAdapter {
+
+    /** soapService **/
+    public ISoapService soapService = new SoapService();
     private class buttonViewHolder {
         ImageView orderimg;
         TextView ordertype;
         TextView orderresult;
         TextView proname;
         TextView proprice;
+        TextView procount;
         TextView tvhj;
         TextView btndelete;
+        String proid = "";
     }
 
     private List<Order> orderList;
@@ -75,30 +85,46 @@ public class MyOrderListAdapter extends BaseAdapter {
             holder.proname = (TextView) convertView.findViewById(R.id.proname);
             holder.proprice = (TextView) convertView
                     .findViewById(R.id.proprice);
+            holder.procount = (TextView) convertView
+                    .findViewById(R.id.procount);
             holder.tvhj = (TextView) convertView.findViewById(R.id.tvhj);
             holder.btndelete = (TextView) convertView
                     .findViewById(R.id.btndelete);
+            holder.btndelete.setClickable(true);
             // Instance.imageLoader.displayImage(
             // SOAP_UTILS.HTTP_HEAD_PATH + orderList.get(position).getheadpic(),
             // viewHolder.headpic, Instance.user_s_options);
-            holder.ordertype.setText(orderList.get(position).getType());
-            holder.orderresult.setText(orderList.get(position).getResult());
-            holder.proname.setText(orderList.get(position).getName());
-            holder.proprice.setText(orderList.get(position).getPrice() + "/KG");
-            holder.tvhj.setText("共计：¥" + orderList.get(position).getHj());
+            holder.ordertype.setText(orderList.get(position).getPaymenttype());
+            holder.orderresult.setText(orderList.get(position).getOrderstate());
+            holder.proname.setText(orderList.get(position).getProductname());
+            holder.proprice.setText(orderList.get(position).getProductprice() + "/KG");
+            holder.procount.setText("* " + orderList.get(position).getProductnum());
+            holder.tvhj.setText("共计：¥" + orderList.get(position).getProductprice());
+            holder.proid = orderList.get(position).getId();
+            holder.btndelete.setOnClickListener(new View.OnClickListener() {
 
-            int value1 = 0;
-            Class<R.drawable> cls = R.drawable.class;
-            try {
-                value1 = cls
-                        .getDeclaredField(orderList.get(position).getThumb())
-                        .getInt(null);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            holder.orderimg.setImageResource(value1);
+                @Override
+                public void onClick(View v) {
 
+                    String[] property_va = new String[] {holder.proid};
+                    soapService.deleteOrderById(property_va);
+                }
+            });
+//获取本地图片
+//            int value1 = 0;
+//            Class<R.drawable> cls = R.drawable.class;
+//            try {
+//                value1 = cls
+//                        .getDeclaredField(orderList.get(position).getThumb())
+//                        .getInt(null);
+//            } catch (Exception e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            holder.orderimg.setImageResource(value1);
+
+            String imgPath1 = orderList.get(position).getProductimg();
+            Instance.imageLoader.displayImage(imgPath1,holder.orderimg, Instance.user_s_options);
             convertView.setTag(holder);
 
         } else {
@@ -106,7 +132,8 @@ public class MyOrderListAdapter extends BaseAdapter {
             holder = (buttonViewHolder) convertView.getTag();
 
         }
-
+       
+        
         return convertView;
     }
 

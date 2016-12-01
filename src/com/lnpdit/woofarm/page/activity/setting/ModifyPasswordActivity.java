@@ -1,5 +1,7 @@
 package com.lnpdit.woofarm.page.activity.setting;
 
+import org.json.JSONObject;
+
 import com.hp.hpl.sparta.Text;
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.base.component.BaseActivity;
@@ -25,7 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ModifyPasswordActivity extends Activity
+public class ModifyPasswordActivity extends BaseActivity
         implements OnClickListener {
     Context context;
     private ImageView imgBack;
@@ -34,6 +36,8 @@ public class ModifyPasswordActivity extends Activity
     EditText password_edit;
     Button login_bt;
     private TextView tvSubmit;
+    private String memberid = "";
+    private String oldpassword="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,10 @@ public class ModifyPasswordActivity extends Activity
         setContentView(R.layout.activity_resetpassword);
 
         context = this;
+        Intent intent= getIntent();
+        oldpassword = intent.getStringExtra("oldpassword");
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
         initView();
 
     }
@@ -53,6 +61,8 @@ public class ModifyPasswordActivity extends Activity
         tvBack.setOnClickListener(this);
         tvSubmit = (TextView) findViewById(R.id.tv_submit);
         tvSubmit.setOnClickListener(this);
+        username_edit = (EditText) findViewById(R.id.username_edit);
+        password_edit = (EditText) findViewById(R.id.password_edit);
 
     }
 
@@ -70,8 +80,20 @@ public class ModifyPasswordActivity extends Activity
             finish();
             break;
         case R.id.tv_submit:
+            if(username_edit.getText().toString().equals("")||username_edit.getText().toString().equals(null)){
 
-            Toast.makeText(this, "密码修改成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "请输入新密码！", Toast.LENGTH_SHORT).show();
+            } 
+            if(password_edit.getText().toString().equals("")||username_edit.getText().toString().equals(null)){
+
+                Toast.makeText(this, "请输确认密码！", Toast.LENGTH_SHORT).show();
+            }
+            if(!password_edit.getText().toString().equals(username_edit.getText().toString())){
+
+                Toast.makeText(this, "确认密码不一致！", Toast.LENGTH_SHORT).show();
+            }
+            String[] property_va = new String[] { memberid, oldpassword, username_edit.getText().toString()};
+            soapService.setPassword(property_va);
             finish();
             break;
 
@@ -128,4 +150,27 @@ public class ModifyPasswordActivity extends Activity
         return false;
     }
 
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.SETPASSWORD)) {
+              if (obj.getObj() != null) {
+                  try {
+                      JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                      String result = json_obj.get("status").toString();
+                      String message = json_obj.get("msg").toString();
+                      if(result.equals("true")){
+                          Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                        finish();
+                      }else{
+                          Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                      }
+                      } catch (Exception e) {
+                          // TODO: handle exception
+                          e.printStackTrace();
+                      }
+              }else{
+                  Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+              }
+          }
+      }
 }

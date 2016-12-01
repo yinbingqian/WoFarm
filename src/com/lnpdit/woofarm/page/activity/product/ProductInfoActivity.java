@@ -1,7 +1,13 @@
 package com.lnpdit.woofarm.page.activity.product;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.company.PlaySDK.IPlaySDK;
 import com.dh.DpsdkCore.Enc_Channel_Info_Ex_t;
@@ -9,14 +15,20 @@ import com.dh.DpsdkCore.Get_RealStream_Info_t;
 import com.dh.DpsdkCore.IDpsdkCore;
 import com.dh.DpsdkCore.Login_Info_t;
 import com.dh.DpsdkCore.Return_Value_Info_t;
-import com.dh.DpsdkCore.fDPSDKStatusCallback;
 import com.dh.DpsdkCore.fMediaDataCallback;
-import com.eroad.widget.calendar.CalanderActivity;
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.base.component.BaseActivity;
+import com.lnpdit.woofarm.db.DBHelper;
+import com.lnpdit.woofarm.entity.Menu;
+import com.lnpdit.woofarm.entity.ProductImgs;
+import com.lnpdit.woofarm.entity.ProductInfo;
+import com.lnpdit.woofarm.http.SoapRes;
+import com.lnpdit.woofarm.instance.Instance;
 import com.lnpdit.woofarm.page.activity.video.RealPlayActivity;
+import com.lnpdit.woofarm.page.adapter.ProductImgsListAdapter;
+import com.lnpdit.woofarm.page.adapter.ProductListAdapter;
+import com.lnpdit.woofarm.utils.SOAP_UTILS;
 import com.lnpdit.woofarm.widget.BuyNowPopWin;
-import com.lnpdit.woofarm.widget.TakePhotoPopWin;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,11 +42,12 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SurfaceHolder;
+import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.SurfaceHolder.Callback;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +65,36 @@ public class ProductInfoActivity extends BaseActivity {
     private ImageView imgAd1;
     BuyNowPopWin buyNowPopWin;
     Context context;
-    private String name;
-
+    private String name = "";
+    private String productid = "";
+    private String memberid = ""; 
+    
+    private TextView proname_tv;
+    private TextView proweight_tv;
+    private TextView prodate_tv;
+    private TextView location_tv;
+    private TextView prototal_tv;
+    private ListView prodetail_layout;
+    private ProductListAdapter productlistAdapter;//商品详情图片
+    
+    String image = "";
+    String price = "";
+    String shelvestime = "";
+    String area = "";
+    String channelid = "";
+    String proip = "";
+    String proport = "";
+    String account = "";
+    String propassword = "";
+    String type = "";
+    String id = "";
+    String yield = "";
+    
+    private DBHelper dbh;
+    private ProductInfo productInfo;
+    private List<ProductInfo> productInfoList;
+    private List<ProductImgs> productimgsListView;
+    private ProductImgsListAdapter productimgsAdapter;
     // 视频
 
     // 登录部分
@@ -98,7 +139,14 @@ public class ProductInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_productinfo);
 
         name = this.getIntent().getStringExtra("name");
+        productid = this.getIntent().getStringExtra("productid");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
         initView();
+        
+        String[] property_va = new String[] {productid};
+        soapService.getProduct(property_va);
 
         // // 播放视频
         //
@@ -152,6 +200,14 @@ public class ProductInfoActivity extends BaseActivity {
         btnAddCart.setOnClickListener(this);
         // m_svPlayer = (SurfaceView) findViewById(R.id.sv_player);
         carcount_tv = (TextView) findViewById(R.id.carcount_tv);
+        
+        proname_tv = (TextView) findViewById(R.id.proname_tv);
+        proweight_tv = (TextView) findViewById(R.id.proweight_tv);
+        prodate_tv = (TextView) findViewById(R.id.prodate_tv);
+        location_tv = (TextView) findViewById(R.id.location_tv);
+        prototal_tv = (TextView) findViewById(R.id.prototal_tv);
+        prodetail_layout = (ListView) findViewById(R.id.prodetail_layout);
+        
     }
 
     @Override
@@ -165,17 +221,16 @@ public class ProductInfoActivity extends BaseActivity {
             break;
         case R.id.add_img:
             String add_str = count_tv.getText().toString();
-            int add_int =  Integer.parseInt(add_str);
-            count_tv.setText(add_int + 1 );
+            count_tv.setText(Integer.valueOf(count_tv.getText().toString()) + 1 + "" );
             break;
         case R.id.subtract_img:
             String count_str = count_tv.getText().toString();
             int coutn_int =  Integer.parseInt(count_str);
           
             if(coutn_int <= 1){
-                count_tv.setText(coutn_int);
+                count_tv.setText(count_str);
             }else{
-                count_tv.setText(coutn_int - 1);
+                count_tv.setText(coutn_int - 1 + "");
             }
             break;
         case R.id.btnbuynow:
@@ -188,8 +243,14 @@ public class ProductInfoActivity extends BaseActivity {
             startActivity(intent);
             break;
         case R.id.btnaddcart:
-            Toast.makeText(this, "成功加入购物车！", Toast.LENGTH_SHORT).show();
-            carcount_tv.setText(carcount_tv.getText().toString() + 1);
+
+            if(memberid.equals("")||memberid.equals(null)){
+                Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT).show();
+            }else{
+
+                String[] property_va = new String[] { productid, count_tv.getText().toString(),memberid};
+                soapService.addcart(property_va);
+            }
             break;
         default:
             break;
@@ -460,4 +521,88 @@ public class ProductInfoActivity extends BaseActivity {
         super.onDestroy();
     }
 
+//    private void getDBData() {
+//        dbh = new DBHelper(this);
+//        productInfo = new ProductInfo();
+//
+//        productInfoList = dbh.queryProductInfo();
+//
+//     
+//         
+//   }
+    
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.GETPRODUCT)) {
+            if (obj.getObj() != null) {
+                    try {
+                        JSONObject json_obj = new JSONObject(obj.getObj().toString());
+                        String result = json_obj.get("status").toString();
+                        if(result.equals("true")){
+                            
+                             image = json_obj.get("image").toString();
+                             name = json_obj.get("name").toString();
+                             price = json_obj.get("price").toString();
+                             shelvestime = json_obj.get("shelvestime").toString();
+                             area = json_obj.get("area").toString();
+                             channelid = json_obj.get("channelid").toString();
+                             proip = json_obj.get("ip").toString();
+                             proport = json_obj.get("port").toString();
+                             account = json_obj.get("account").toString();
+                             propassword = json_obj.get("password").toString();
+                             type = json_obj.get("type").toString();
+                             id = json_obj.get("id").toString();
+                             yield = json_obj.get("yield").toString();
+
+                             JSONArray imgs_array = json_obj.getJSONArray("imgs");
+                              productimgsListView = new ArrayList<ProductImgs>();
+                             for (int i = 0; i < imgs_array.length(); i++) {
+                                 ProductImgs images = new ProductImgs();
+                                 String imgs = imgs_array.get(i).toString();
+                                 images.setImgs(imgs);
+                                 productimgsListView.add(images);
+                             }
+                             
+                             productimgsAdapter = new ProductImgsListAdapter(context, productimgsListView);
+                             prodetail_layout.setAdapter(productimgsAdapter);
+
+                           Instance.imageLoader.displayImage(image,imgAd1, Instance.user_s_options);
+                           proname_tv.setText(name);
+                           proweight_tv.setText(price);
+                           prodate_tv.setText(shelvestime);
+                           location_tv.setText(area);
+                           prototal_tv.setText(price);
+                           if(account.equals("")||account.equals(null)){
+                               account = "0";
+                           }
+                           carcount_tv.setText(account);
+   
+//                            dbh.clearProductInfo();
+                            
+//                        getDBData();
+                        
+                        }else{
+                            Toast.makeText(context, json_obj.get("msg").toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                
+                }else{
+                    Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+                }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.ADDCART)) {
+            if (obj.getObj() != null) {
+                if (obj.getObj().toString().equals("true")) {
+//                    Toast.makeText(context, "加入购物车成功", Toast.LENGTH_SHORT).show();
+
+                    carcount_tv.setText(Integer.valueOf(carcount_tv.getText().toString()) + 1 + "");
+                } else {
+                    Toast.makeText(context, obj.getObj().toString(), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(context, "加入购物车失败", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

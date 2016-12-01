@@ -129,9 +129,9 @@ public class ImageCycleView extends LinearLayout {
 	 */
 	public void setImageResources(ArrayList<ADInfo> infoList, ImageCycleViewListener imageCycleViewListener) {
 		infoList_tt = infoList;
-		if(infoList.size()>0){			
-			textview.setText(infoList.get(0).getTitle());
-		}
+//		if(infoList.size()>0){			
+//			textview.setText(infoList.get(0).getTitle());
+//		}
 		// 清除所有子视图
 		mGroup.removeAllViews();
 		// 图片广告数量
@@ -203,7 +203,7 @@ public class ImageCycleView extends LinearLayout {
 					mImageIndex = 1;
 				}
 				mBannerPager.setCurrentItem(mImageIndex);
-				textview.setText(infoList_tt.get(mImageIndex-1).getTitle());
+//				textview.setText(infoList_tt.get(mImageIndex-1).getTitle());
 				
 //				SoapRes soapRes = new SoapRes();
 //				soapRes.setCode(SOAP_UTILS.ACTION.LIVECIRCLE);
@@ -288,8 +288,8 @@ public class ImageCycleView extends LinearLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, final int position) {
-            String imageUrl = mAdList.get(position).getUrl();
-            int imageId = mAdList.get(position).getImg();
+            String imageUrl = mAdList.get(position).getImage();
+//            int imageId = mAdList.get(position).getImage();
             ImageView imageView = null;
             if (mImageViewCacheList.isEmpty()) {
                 imageView = new ImageView(mContext);
@@ -310,7 +310,7 @@ public class ImageCycleView extends LinearLayout {
                 }
             });
             // imageView.setTag(imageUrl);
-            imageView.setBackgroundResource(imageId);
+//            imageView.setBackgroundResource(imageId);
             container.addView(imageView);
             mImageCycleViewListener.displayImage(imageUrl, imageView);
             return imageView;

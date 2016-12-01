@@ -48,11 +48,12 @@
             android:textSize="17dp" />
     </RelativeLayout>
 
-    <ListView
+    <com.lnpdit.woofarm.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/listview_addresslist"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/top_layout"
+        android:layout_marginBottom="49dp"
         android:background="#ffffff"
         android:cacheColorHint="#00000000"
         android:divider="#eeeeee"

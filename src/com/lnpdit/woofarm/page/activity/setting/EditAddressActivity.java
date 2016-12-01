@@ -9,23 +9,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.bigkoo.pickerview.OptionsPickerView;
-import com.hp.hpl.sparta.Text;
 import com.lnpdit.woofarm.R;
-import com.lnpdit.woofarm.base.component.BaseActivity;
-import com.lnpdit.woofarm.entity.LoginUser;
+import com.lnpdit.woofarm.http.ISoapService;
 import com.lnpdit.woofarm.http.SoapRes;
-import com.lnpdit.woofarm.md5.MD5Plus;
-import com.lnpdit.woofarm.page.activity.tabhost.MainTabHostActivity;
+import com.lnpdit.woofarm.http.SoapService;
 import com.lnpdit.woofarm.utils.SOAP_UTILS;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -36,9 +30,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditAddressActivity extends Activity implements OnClickListener {
+    /** soapService **/
+    public ISoapService soapService = new SoapService();
     Context context;
     private ImageView imgBack;
     private TextView tvBack;
+    private TextView tv_save;
     EditText username_edit;
     EditText password_edit;
     Button login_bt;
@@ -46,6 +43,11 @@ public class EditAddressActivity extends Activity implements OnClickListener {
     private RelativeLayout choosecity_layout;
     private TextView cityEdit;
     private TextView addInfo;
+    private EditText phone_edit;
+    private EditText code_edit;
+    private String province_str = "";
+    private String city_str = "";
+    private String area_str = "";
 
     // 城市选择器
 
@@ -59,6 +61,14 @@ public class EditAddressActivity extends Activity implements OnClickListener {
     private OptionsPickerView<String> mOpv;
     private JSONObject mJsonObj;
     private TextView mCity;
+    private String memberid = "";
+    private String type = "";
+    private String addressid = "";
+    private String username = "";
+    private String phone = "";
+    private String province = "";
+    private String city = "";
+    private String address = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,18 @@ public class EditAddressActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_editaddress);
 
         context = this;
+        SharedPreferences sharedPreferences = getSharedPreferences("userinfo",MODE_PRIVATE);
+        memberid =sharedPreferences.getString("userid", ""); 
+        Intent intent = getIntent();
+        type = intent.getStringExtra("type");
+        if(type.equals("edit")){
+            addressid = intent.getStringExtra("addressid");
+            username = intent.getStringExtra("username");
+            phone = intent.getStringExtra("phone");
+            province = intent.getStringExtra("province");
+            city = intent.getStringExtra("city");
+            address = intent.getStringExtra("address");
+        }
         initView();
 
         // 初始化Json对象
@@ -101,6 +123,10 @@ public class EditAddressActivity extends Activity implements OnClickListener {
                                 + mListArea.get(options1).get(option2)
                                         .get(options3);
                         addInfo.setText(tx);
+
+                        province_str = mListProvince.get(options1);
+                        city_str = mListCiry.get(options1).get(option2);
+                        area_str = mListArea.get(options1).get(option2).get(options3);
                     }
                 });
 
@@ -108,16 +134,26 @@ public class EditAddressActivity extends Activity implements OnClickListener {
 
     private void initView() {
         imgBack = (ImageView) findViewById(R.id.img_back);
+        imgBack.setClickable(true);
         imgBack.setOnClickListener(this);
         tvBack = (TextView) findViewById(R.id.tv_back);
+        tvBack.setClickable(true);
         tvBack.setOnClickListener(this);
+        tv_save = (TextView) findViewById(R.id.tv_save);
+        tv_save.setClickable(true);
+        tv_save.setOnClickListener(this);
         cityEdit = (TextView) findViewById(R.id.city_edit);
         cityEdit.setOnClickListener(this);
         addInfo = (TextView) findViewById(R.id.add_info);
+        phone_edit = (EditText) findViewById(R.id.phone_edit);
+        code_edit = (EditText) findViewById(R.id.code_edit);
+        password_edit = (EditText) findViewById(R.id.password_edit);
         choosecity_layout = (RelativeLayout) findViewById(
                 R.id.choosecity_layout);
         choosecity_layout.setOnClickListener(this);
-
+        phone_edit.setText(username);
+        code_edit.setText(phone);
+        password_edit.setText(address);
     }
 
     public String getStringData(int id) {
@@ -127,9 +163,27 @@ public class EditAddressActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-        case R.id.tv_back:
-            finish();
+        case R.id.tv_save:
+            if(phone_edit.getText().toString().equals("")||phone_edit.getText().toString().equals(null)){
+                Toast.makeText(context, "请输入收货人", Toast.LENGTH_SHORT).show();
+            }else if(code_edit.getText().toString().equals("")||code_edit.getText().toString().equals(null)){
+                Toast.makeText(context, "请输入联系电话", Toast.LENGTH_SHORT).show();
+            }else if(password_edit.getText().toString().equals("")||password_edit.getText().toString().equals(null)){
+                Toast.makeText(context, "请输入详细地址", Toast.LENGTH_SHORT).show();
+            }else{
+               if(type.equals("add")){
+ 
+                 String[] property_vas = new String[] {memberid , phone_edit.getText().toString(), code_edit.getText().toString(), area_str + password_edit.getText().toString(),province_str, city_str};
+                 soapService.addReceaddress(property_vas);
+               }else{
+
+                 String[] property_vas = new String[] {addressid , phone_edit.getText().toString(), code_edit.getText().toString(), area_str + password_edit.getText().toString(),province_str, city_str};
+                 soapService.updateReceaddress(property_vas);
+               }
+                finish();
+            }
             break;
+        case R.id.tv_back:
         case R.id.img_back:
             finish();
             break;
@@ -196,5 +250,47 @@ public class EditAddressActivity extends Activity implements OnClickListener {
             e.printStackTrace();
         }
         mJsonObj = null;
+    }
+    
+    public void onEvent(SoapRes obj) {
+        if (obj.getCode().equals(SOAP_UTILS.METHOD.ADDRECEADDRESS)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }else if (obj.getCode().equals(SOAP_UTILS.METHOD.UPDATERECEADDRESS)) {
+            if (obj.getObj() != null) {
+                try {
+                    JSONObject json_obj = new JSONObject(obj.getObj().toString());
+
+                    String result = json_obj.get("status").toString();
+                    String message = json_obj.get("msg").toString();
+                    if(result.equals("true")){
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }else{
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();  
+                    }
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        e.printStackTrace();
+                    }
+            }else{
+                Toast.makeText(context, "网络异常", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

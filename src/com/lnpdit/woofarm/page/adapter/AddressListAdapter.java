@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.lnpdit.woofarm.R;
 import com.lnpdit.woofarm.entity.Address;
-import com.lnpdit.woofarm.entity.Cart;
-import com.lnpdit.woofarm.entity.DataInfoUn;
-import com.lnpdit.woofarm.entity.ProductRow;
-import com.lnpdit.woofarm.page.activity.product.ProductInfoActivity;
+import com.lnpdit.woofarm.http.ISoapService;
+import com.lnpdit.woofarm.http.SoapService;
 import com.lnpdit.woofarm.page.activity.setting.EditAddressActivity;
 
 import android.content.Context;
@@ -15,12 +13,16 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 public class AddressListAdapter extends BaseAdapter {
+
+    /** soapService **/
+    public ISoapService soapService = new SoapService();
     private class buttonViewHolder {
         TextView user;
         TextView phone;
@@ -29,7 +31,7 @@ public class AddressListAdapter extends BaseAdapter {
         TextView tv_edit;
         ImageView img_delete;
         TextView tv_delete;
-        CheckBox cb;
+        RadioButton cb;
     }
 
     private Address appInfo;
@@ -38,6 +40,13 @@ public class AddressListAdapter extends BaseAdapter {
     private Context mContext;
     private buttonViewHolder holder;
 
+    String addressid = "";
+    String username = "";
+    String phone = "";
+    String province = "";
+    String city = "";
+    String address = "";
+    
     public AddressListAdapter(Context context, List<Address> appList) {
         mAppList = appList;
         mContext = context;
@@ -82,11 +91,20 @@ public class AddressListAdapter extends BaseAdapter {
             holder.img_edit = (ImageView) convertView
                     .findViewById(R.id.img_edit);
             holder.tv_edit = (TextView) convertView.findViewById(R.id.tv_edit);
+            holder.tv_edit.setOnClickListener(new editButtonListener(position, holder.tv_edit));
             holder.img_delete = (ImageView) convertView
                     .findViewById(R.id.img_delete);
             holder.tv_delete = (TextView) convertView
                     .findViewById(R.id.tv_delete);
-            holder.cb = (CheckBox) convertView.findViewById(R.id.chkItem);
+            holder.img_delete.setClickable(true);
+//            holder.img_delete.setOnClickListener(new ButtonListener(position, addressid, holder.img_delete));
+            
+            holder.tv_delete.setClickable(true);
+            holder.tv_delete.setOnClickListener(new ButtonListener(position, holder.tv_delete));
+            holder.cb = (RadioButton) convertView.findViewById(R.id.chkItem);
+            holder.cb.setClickable(true);
+            holder.cb.setOnClickListener(new statButtonListener(position, holder.cb));
+          
             convertView.setTag(holder);
 
         } else {
@@ -97,32 +115,92 @@ public class AddressListAdapter extends BaseAdapter {
 
         appInfo = mAppList.get(position);
 
-        if (appInfo.getIfdefault().equals("1")) {
+        if (appInfo.getStat().equals(R.string.defalt_checkbox)) {
             holder.cb.setChecked(true);
         }
-        holder.user.setText("收货人" + appInfo.getName());
-        holder.phone.setText(appInfo.getPhone());
-        holder.addinfo.setText("收货地址" + appInfo.getAddinfo());
+        holder.user.setText("收货人：" + appInfo.getUsername());
+        holder.phone.setText(appInfo.getMobile());
+        holder.addinfo.setText("收货地址：" + appInfo.getProvince() + appInfo.getCity() + appInfo.getAddress());
+        addressid = appInfo.getId();
 
-        holder.img_edit.setOnClickListener(new View.OnClickListener() {
+      if(mAppList.get(position).getStat().toString().equals("默认")){
+          
+          holder.cb.setChecked(true);
+      }else{
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(mContext, EditAddressActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
-        holder.tv_edit.setOnClickListener(new View.OnClickListener() {
+          holder.cb.setChecked(false);
+      }
+      
 
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(mContext, EditAddressActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
+//     if(holder.cb.isChecked()){
+//          
+//          holder.cb.setBackgroundDrawable(R.drawable.select_reveal);
+//      }else{
+//
+//          holder.cb.setBackground(R.drawable.selecte);
+//      }
+      
         return convertView;
     }
+    class ButtonListener implements OnClickListener {
+        private int position;
+        private TextView tv;
 
+        public ButtonListener(int pos, TextView _tv) {
+            // TODO Auto-generated constructor stub
+            position = pos;
+            tv = _tv;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            String[] property_va = new String[] {mAppList.get(position).getId()};
+            soapService.deleteReceaddressById(property_va);
+        }
+    }
+    
+    class editButtonListener implements OnClickListener {
+        private int position;
+        private TextView tv;
+
+        public editButtonListener(int pos, TextView _tv) {
+            // TODO Auto-generated constructor stub
+            position = pos;
+            tv = _tv;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            Intent intent = new Intent();
+            intent.putExtra("type", "edit");
+            intent.putExtra("addressid", mAppList.get(position).getId());
+            intent.putExtra("username", mAppList.get(position).getUsername());
+            intent.putExtra("phone", mAppList.get(position).getMobile());
+            intent.putExtra("province", mAppList.get(position).getProvince());
+            intent.putExtra("city", mAppList.get(position).getCity());
+            intent.putExtra("address", mAppList.get(position).getAddress());
+            intent.setClass(mContext, EditAddressActivity.class);
+            mContext.startActivity(intent);
+        }
+    }
+    
+    class statButtonListener implements OnClickListener {
+        private int position;
+        private RadioButton tv;
+
+        public statButtonListener(int pos, RadioButton _tv) {
+            // TODO Auto-generated constructor stub
+            position = pos;
+            tv = _tv;
+        }
+        @Override
+        public void onClick(View v) {
+            // TODO Auto-generated method stub
+            String[] property_va = new String[] {mAppList.get(position).getId()};
+            soapService.setReceaddressStatById(property_va);
+            holder.cb.setChecked(true);
+        }
+    }
 }
